@@ -184,6 +184,34 @@
             border-radius: 50%;
             box-shadow: 0 0 15px rgba(255,105,180,0.3);
         }
+
+        /* 魔法音乐播放器 */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        .music-btn {
+            background: rgba(255,255,255,0.9);
+            border: 1px solid #ff69b4;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255,105,180,0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255,105,180,0.5);
+        }
     </style>
 </head>
 <body>
@@ -236,13 +264,21 @@
         </div>
     </div>
 
+    <!-- 魔法音乐播放器 -->
+    <div class="music-control">
+        <audio id="magic-bgm" loop>
+            <source src="恋风 demo3.1.mp3" type="audio/mpeg">
+            您的浏览器不支持音频播放
+        </audio>
+        <button class="music-btn" onclick="toggleMusic()">🎵</button>
+    </div>
+
     <script>
         // 魔法时间系统
         function updateMagicTime() {
             const timeContainer = document.getElementById('time-system');
             const now = new Date();
             
-            // 使用魔女纪年法
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const date = String(now.getDate()).padStart(2, '0');
@@ -252,7 +288,6 @@
             const weekDays = ['魔曜日', '星耀日', '月曜日', '炎曜日', '水曜日', '木曜日', '圣曜日'];
             const week = weekDays[now.getDay()];
             
-            // 添加魔法特效字符
             const magicSymbol = ['✨', '🌟', '💫', '🌸'][Math.floor(Math.random()*4)];
             
             timeContainer.innerHTML = `
@@ -262,11 +297,11 @@
             `;
         }
 
-        // 初始化并每秒更新
+        // 初始化时间系统
         updateMagicTime();
         setInterval(updateMagicTime, 1000);
         
-        // 添加随机星光特效
+        // 随机星光特效
         setInterval(() => {
             const timeElement = document.getElementById('time-system');
             timeElement.style.textShadow = `
@@ -274,6 +309,29 @@
                 0 0 20px rgba(255,${Math.random()*105+150},${Math.random()*180+75},0.5)
             `;
         }, 3000);
+
+        // 音乐控制系统
+        const bgm = document.getElementById('magic-bgm');
+        let isFirstPlay = true;
+
+        // 自动播放处理
+        document.addEventListener('click', initMusic, { once: true });
+
+        function initMusic() {
+            bgm.volume = 0.3;
+            bgm.play().catch(() => {
+                if(confirm('是否允许播放背景音乐？')) bgm.play();
+            });
+        }
+
+        function toggleMusic() {
+            if(isFirstPlay) {
+                initMusic();
+                isFirstPlay = false;
+            }
+            bgm.paused ? bgm.play() : bgm.pause();
+            document.querySelector('.music-btn').textContent = bgm.paused ? '🎵' : '🎶';
+        }
     </script>
 </body>
 </html>
