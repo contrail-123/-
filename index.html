@@ -72,6 +72,28 @@
             text-shadow: 0 0 10px rgba(255,105,180,0.2);
         }
 
+        /* 魔法时间显示样式 */
+        .magic-time {
+            font-family: '华文楷体', cursive;
+            font-size: 1.2em;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(255,105,180,0.3);
+            padding: 0.8rem 1.5rem;
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            display: inline-block;
+            margin-top: 1rem;
+            position: relative;
+            border: 1px solid #ffb3d9;
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        .magic-time::before {
+            content: '⏳';
+            margin-right: 8px;
+            filter: hue-rotate(45deg);
+        }
+
         /* 导航栏樱花特效 */
         .nav {
             display: flex;
@@ -168,6 +190,7 @@
     <div class="header">
         <h1>🌌轨迹魔女见闻录</h1>
         <p>——跨越次元的魔女观测者档案</p>
+        <div id="time-system" class="magic-time"></div>
     </div>
 
     <nav class="nav">
@@ -212,5 +235,45 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // 魔法时间系统
+        function updateMagicTime() {
+            const timeContainer = document.getElementById('time-system');
+            const now = new Date();
+            
+            // 使用魔女纪年法
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const date = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const weekDays = ['魔曜日', '星耀日', '月曜日', '炎曜日', '水曜日', '木曜日', '圣曜日'];
+            const week = weekDays[now.getDay()];
+            
+            // 添加魔法特效字符
+            const magicSymbol = ['✨', '🌟', '💫', '🌸'][Math.floor(Math.random()*4)];
+            
+            timeContainer.innerHTML = `
+                ${magicSymbol} ${year}年${month}月${date}日 ${week}
+                <div style="font-size:0.9em;margin-top:5px;">${hours}:${minutes}:${seconds}</div>
+                ${magicSymbol}
+            `;
+        }
+
+        // 初始化并每秒更新
+        updateMagicTime();
+        setInterval(updateMagicTime, 1000);
+        
+        // 添加随机星光特效
+        setInterval(() => {
+            const timeElement = document.getElementById('time-system');
+            timeElement.style.textShadow = `
+                0 0 10px rgba(255,${Math.random()*105+150},${Math.random()*180+75},0.7),
+                0 0 20px rgba(255,${Math.random()*105+150},${Math.random()*180+75},0.5)
+            `;
+        }, 3000);
+    </script>
 </body>
 </html>
