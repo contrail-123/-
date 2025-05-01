@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <title>轨迹魔女见闻录 - 缇娜丝·蒂基特的次元档案</title>
     <style>
+        /* 视差背景层 */
+        .parallax-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200%; /* 增加高度增强视差效果 */
+            background: 
+                linear-gradient(rgba(240, 250, 255, 0.3), rgba(230, 247, 255, 0.3)),
+                url('./图片/插画/图片1.png') center/cover no-repeat;
+            z-index: -2;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
         /* 魔法阵动画 */
         @keyframes rotate {
             from { transform: rotate(0deg); }
@@ -16,17 +31,16 @@
         }
 
         :root {
-            --primary-color: #fff5f8;
-            --secondary-color: #ffeef2;
-            --accent-color: #ff69b4;
-            --magic-circle-color: rgba(255,105,180,0.15);
+            --primary-color: #f0faff;
+            --secondary-color: #e6f7ff;
+            --accent-color: #87CEEB;
+            --magic-circle-color: rgba(135,206,235,0.15);
         }
 
         body {
             background: 
-                radial-gradient(circle at 50% 50%, #fff0f5 20%, #ffe6ee 80%),
-                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhYWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==');
-            color: #5a3a4a;
+                linear-gradient(rgba(240, 250, 255, 0.3), rgba(230, 247, 255, 0.3));
+            color: #2c4f5a;
             font-family: 'Segoe UI', '华文楷体', cursive;
             line-height: 1.6;
             min-height: 100vh;
@@ -42,7 +56,7 @@
             left: 50%;
             width: 600px;
             height: 600px;
-            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="none" stroke="%23ff69b4" stroke-width="0.8" stroke-dasharray="2 3"/><path d="M50 10Q70 30 90 50Q70 70 50 90Q30 70 10 50Q30 30 50 10" fill="none" stroke="%23ff69b4" stroke-width="0.6"/><path d="M30 30L70 70M70 30L30 70" stroke="%23ff69b4" stroke-width="0.5"/></svg>') center/contain no-repeat;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="none" stroke="%2387CEEB" stroke-width="0.8" stroke-dasharray="2 3"/><path d="M50 10Q70 30 90 50Q70 70 50 90Q30 70 10 50Q30 30 50 10" fill="none" stroke="%2387CEEB" stroke-width="0.6"/><path d="M30 30L70 70M70 30L30 70" stroke="%2387CEEB" stroke-width="0.5"/></svg>') center/contain no-repeat;
             opacity: 0.15;
             animation: rotate 180s linear infinite;
             transform: translate(-50%, -50%);
@@ -56,7 +70,7 @@
             left: 50%;
             width: 580px;
             height: 580px;
-            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 15a35 35 0 1 0 0 70 35 35 0 0 0 0-70zm0 5a30 30 0 1 1 0 60 30 30 0 0 1 0-60z" fill="%23ff69b4" opacity="0.3"/><path d="M50 20l5 15-5 15-5-15z" fill="%23ffb3d9"/><circle cx="50" cy="50" r="5" fill="%23ff69b4"/></svg>') center/contain no-repeat;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 15a35 35 0 1 0 70 0 35 35 0 1 0-70 0zm0 5a30 30 0 1 1 60 0 30 30 0 1 1-60 0z" fill="%2387CEEB" opacity="0.3"/><path d="M50 20l5 15-5 15-5-15z" fill="%23b0e0e6"/><circle cx="50" cy="50" r="5" fill="%2387CEEB"/></svg>') center/contain no-repeat;
             opacity: 0.2;
             animation: rotate 120s linear infinite reverse;
             transform: translate(-50%, -50%);
@@ -66,25 +80,24 @@
         .header {
             text-align: center;
             padding: 2rem;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.66);
             border-bottom: 3px solid var(--accent-color);
-            box-shadow: 0 4px 20px rgba(255,105,180,0.1);
-            text-shadow: 0 0 10px rgba(255,105,180,0.2);
+            box-shadow: 0 4px 20px rgba(135,206,235,0.1);
+            text-shadow: 0 0 10px rgba(135,206,235,0.2);
         }
 
-        /* 魔法时间显示样式 */
         .magic-time {
             font-family: '华文楷体', cursive;
             font-size: 1.2em;
             color: var(--accent-color);
-            text-shadow: 0 0 10px rgba(255,105,180,0.3);
+            text-shadow: 0 0 10px rgba(135,206,235,0.3);
             padding: 0.8rem 1.5rem;
             background: rgba(255,255,255,0.9);
             border-radius: 15px;
             display: inline-block;
             margin-top: 1rem;
             position: relative;
-            border: 1px solid #ffb3d9;
+            border: 1px solid #b0e0e6;
             animation: glow 2s ease-in-out infinite;
         }
         
@@ -94,18 +107,17 @@
             filter: hue-rotate(45deg);
         }
 
-        /* 导航栏樱花特效 */
         .nav {
             display: flex;
             justify-content: center;
             gap: 2rem;
             padding: 1rem;
-            background: rgba(255,255,255,0.95);
-            box-shadow: 0 2px 15px rgba(255,105,180,0.1);
+            background: rgba(255,255,255,0.66);
+            box-shadow: 0 2px 15px rgba(135,206,235,0.1);
         }
 
         .nav a {
-            color: #ff69b4;
+            color: #87CEEB;
             text-decoration: none;
             font-size: 1.2rem;
             padding: 0.5rem 1rem;
@@ -117,11 +129,11 @@
         .nav a:hover {
             background: var(--secondary-color);
             transform: translateY(-2px);
-            text-shadow: 0 0 8px rgba(255,105,180,0.5);
+            text-shadow: 0 0 8px rgba(135,206,235,0.5);
         }
 
         .nav a::after {
-            content: '🌸';
+            content: '❄️';
             position: absolute;
             right: -10px;
             top: -5px;
@@ -133,15 +145,14 @@
             opacity: 1;
         }
 
-        /* 卡片魔法阵边框 */
         .character-card {
             max-width: 800px;
             margin: 2rem auto;
             padding: 2rem;
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.66);
             border: 2px solid var(--accent-color);
             border-radius: 15px;
-            box-shadow: 0 0 30px rgba(106,90,205,0.1);
+            box-shadow: 0 0 30px rgba(135,206,235,0.1);
             position: relative;
             overflow: hidden;
         }
@@ -151,12 +162,11 @@
             position: absolute;
             width: 120%;
             height: 120%;
-            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="none" stroke="%23ffb3d9" stroke-width="0.8" stroke-dasharray="5 3"/></svg>');
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="none" stroke="%23b0e0e6" stroke-width="0.8" stroke-dasharray="5 3"/></svg>');
             animation: rotate 80s linear infinite;
             opacity: 0.3;
         }
 
-        /* 时间线样式 */
         .timeline {
             position: relative;
             max-width: 1200px;
@@ -167,54 +177,152 @@
         .timeline-item {
             padding: 1.5rem;
             margin: 2rem 0;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.66);
             border-left: 5px solid var(--accent-color);
             border-radius: 8px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.05);
         }
 
-        /* 魔法图标 */
         .magic-icon {
             width: 50px;
             height: 50px;
             background: 
-                radial-gradient(circle at 30% 30%, #ffb3d9, #ff69b4),
+                radial-gradient(circle at 30% 30%, #b0e0e6, #87CEEB),
                 url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 20l15 40H35z" fill="%23fff"/></svg>');
             border: 2px solid var(--accent-color);
             border-radius: 50%;
-            box-shadow: 0 0 15px rgba(255,105,180,0.3);
+            box-shadow: 0 0 15px rgba(135,206,235,0.3);
         }
 
-        /* 魔法音乐播放器 */
         .music-control {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            opacity: 0.8;
-            transition: all 0.3s;
+            background: rgba(255,255,255,0.85);
+            border: 1px solid #87CEEB;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(135,206,235,0.2);
+            width: 250px;
+            transition: all 0.3s ease;
         }
 
-        .music-btn {
-            background: rgba(255,255,255,0.9);
-            border: 1px solid #ff69b4;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(255,105,180,0.3);
-            transition: all 0.3s;
+        .music-control.collapsed {
+            width: 180px;
+            height: 60px;
+            padding: 10px;
+        }
+
+        .music-control.collapsed .collapsible-content {
+            display: none;
+        }
+
+        .music-control.collapsed .music-header {
+            margin-bottom: 0;
+        }
+
+        .music-header {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
 
-        .music-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(255,105,180,0.5);
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: #87CEEB;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+            margin-right: 8px;
+        }
+
+        .music-control.collapsed .toggle-btn {
+            transform: rotate(180deg);
+        }
+
+        .song-list {
+            list-style: none;
+            padding: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+
+        .song-list li {
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .song-list li:hover {
+            background: #e1f5fe;
+        }
+
+        .music-info {
+            font-size: 0.9em;
+            color: #87CEEB;
+            margin: 10px 0;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: #87CEEB;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: #e1f5fe;
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #87CEEB;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translate(-50%, 100%); }
+            to { transform: translate(-50%, 0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .mode-btn {
+            background: none;
+            border: none;
+            color: #87CEEB;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
+    <div class="parallax-background"></div>
+
     <div class="header">
         <h1>🌌轨迹魔女见闻录</h1>
         <p>——跨越次元的魔女观测者档案</p>
@@ -264,16 +372,53 @@
         </div>
     </div>
 
-    <!-- 魔法音乐播放器 -->
     <div class="music-control">
-        <audio id="magic-bgm" loop>
-            <source src="-/lianfeng-demo3.1.MP3" type="audio/mpeg">
+        <div class="music-header">
+            <h4 style="margin:0;color:#87CEEB;">🎵 魔法旋律</h4>
+            <div>
+                <button class="mode-btn" onclick="toggleMode()">🔁</button>
+                <button class="toggle-btn" onclick="toggleCollapse()">▼</button>
+                <button class="music-btn" onclick="toggleMusic()">🎶</button>
+            </div>
+        </div>
+        
+        <div class="collapsible-content">
+            <ul class="song-list">
+                <li data-url="音乐/恋风.MP3" data-title="恋风">❄️ 恋风</li>
+                <li data-url="音乐/雪玫瑰的誓约.MP3" data-title="雪玫瑰的誓约">✨ 雪玫瑰的誓约</li>
+                <li data-url="音乐/缘刃之歌.MP3" data-title="缘刃之歌">⏳ 缘刃之歌</li>
+            </ul>
+
+            <div class="music-info">
+                <div id="current-song">当前曲目：恋风</div>
+                <div class="time-display">
+                    <span id="current-time">00:00</span>
+                    <span id="duration">00:00</span>
+                </div>
+            </div>
+
+            <input type="range" id="progress" value="0" oninput="seekAudio(this.value)">
+            
+            <div class="volume-control">
+                <span>🔊</span>
+                <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" 
+                       oninput="adjustVolume(this.value)" style="width:70%">
+            </div>
+        </div>
+
+        <audio id="magic-bgm" ontimeupdate="updateProgress()" onloadedmetadata="updateDuration()">
             您的浏览器不支持音频播放
         </audio>
-        <button class="music-btn" onclick="toggleMusic()">🎵</button>
     </div>
 
     <script>
+        // 视差滚动效果
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.parallax-background');
+            parallax.style.transform = `translateY(${-scrolled * 0.5}px)`;
+        });
+
         // 魔法时间系统
         function updateMagicTime() {
             const timeContainer = document.getElementById('time-system');
@@ -288,7 +433,7 @@
             const weekDays = ['魔曜日', '星耀日', '月曜日', '炎曜日', '水曜日', '木曜日', '圣曜日'];
             const week = weekDays[now.getDay()];
             
-            const magicSymbol = ['✨', '🌟', '💫', '🌸'][Math.floor(Math.random()*4)];
+            const magicSymbol = ['❄️', '🌌', '💧', '🌀'][Math.floor(Math.random()*4)];
             
             timeContainer.innerHTML = `
                 ${magicSymbol} ${year}年${month}月${date}日 ${week}
@@ -297,28 +442,39 @@
             `;
         }
 
-        // 初始化时间系统
         updateMagicTime();
         setInterval(updateMagicTime, 1000);
         
-        // 随机星光特效
         setInterval(() => {
             const timeElement = document.getElementById('time-system');
             timeElement.style.textShadow = `
-                0 0 10px rgba(255,${Math.random()*105+150},${Math.random()*180+75},0.7),
-                0 0 20px rgba(255,${Math.random()*105+150},${Math.random()*180+75},0.5)
+                0 0 10px rgba(135,206,235,0.7),
+                0 0 20px rgba(135,206,235,0.5)
             `;
         }, 3000);
 
-        // 音乐控制系统
+        // 音乐播放器功能
         const bgm = document.getElementById('magic-bgm');
         let isFirstPlay = true;
+        let playMode = 'list-loop';
+        const songs = [
+            { url: '音乐/恋风.MP3', title: '恋风' },
+            { url: '音乐/雪玫瑰的誓约.MP3', title: '雪玫瑰的誓约' },
+            { url: '音乐/缘刃之歌.MP3', title: '缘刃之歌' }
+        ];
+        let currentSongIndex = 0;
 
-        // 自动播放处理
+        document.querySelectorAll('.song-list li').forEach((li, index) => {
+            li.addEventListener('click', function() {
+                const songData = this.dataset;
+                playSong(songData.url, songData.title, index);
+            });
+        });
+
         document.addEventListener('click', initMusic, { once: true });
 
         function initMusic() {
-            bgm.volume = 0.3;
+            bgm.volume = 0.5;
             bgm.play().catch(() => {
                 if(confirm('是否允许播放背景音乐？')) bgm.play();
             });
@@ -331,6 +487,87 @@
             }
             bgm.paused ? bgm.play() : bgm.pause();
             document.querySelector('.music-btn').textContent = bgm.paused ? '🎵' : '🎶';
+        }
+
+        function playSong(url, title, index) {
+            currentSongIndex = index;
+            bgm.src = url;
+            bgm.play();
+            document.getElementById('current-song').textContent = `当前曲目：${title}`;
+            isFirstPlay = false;
+            
+            document.querySelectorAll('.song-list li').forEach(li => {
+                li.style.background = li.dataset.title === title ? '#e1f5fe' : '';
+            });
+        }
+
+        bgm.addEventListener('ended', () => {
+            if(playMode === 'random') {
+                currentSongIndex = Math.floor(Math.random() * songs.length);
+            } else {
+                currentSongIndex = (currentSongIndex + 1) % songs.length;
+            }
+            const nextSong = songs[currentSongIndex];
+            playSong(nextSong.url, nextSong.title, currentSongIndex);
+        });
+
+        function toggleMode() {
+            const modeBtn = document.querySelector('.mode-btn');
+            playMode = playMode === 'list-loop' ? 'random' : 'list-loop';
+            modeBtn.textContent = playMode === 'list-loop' ? '🔁' : '🔀';
+            showMagicToast(`已切换至${playMode === 'list-loop' ? '列表循环' : '随机播放'}模式`);
+        }
+
+        function showMagicToast(text) {
+            const toast = document.createElement('div');
+            toast.textContent = text;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.background = 'rgba(135,206,235,0.9)';
+            toast.style.color = 'white';
+            toast.style.padding = '8px 15px';
+            toast.style.borderRadius = '20px';
+            toast.style.boxShadow = '0 2px 10px rgba(135,206,235,0.5)';
+            toast.style.animation = 'slideIn 0.5s, fadeOut 0.5s 2s';
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        function updateProgress() {
+            const progress = (bgm.currentTime / bgm.duration) * 100 || 0;
+            document.getElementById('progress').value = progress;
+            document.getElementById('current-time').textContent = formatTime(bgm.currentTime);
+        }
+
+        function updateDuration() {
+            document.getElementById('duration').textContent = formatTime(bgm.duration);
+        }
+
+        function seekAudio(value) {
+            const seekTime = (value / 100) * bgm.duration;
+            bgm.currentTime = seekTime;
+        }
+
+        function adjustVolume(value) {
+            bgm.volume = value;
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        let isCollapsed = false;
+
+        function toggleCollapse() {
+            const player = document.querySelector('.music-control');
+            player.classList.toggle('collapsed');
+            isCollapsed = !isCollapsed;
+            document.querySelector('.toggle-btn').textContent = isCollapsed ? '▲' : '▼';
         }
     </script>
 </body>
