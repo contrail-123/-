@@ -4,13 +4,102 @@
     <meta charset="UTF-8">
     <title>轨迹魔女见闻录 - 缇娜丝·蒂基特的次元档案</title>
     <style>
-        /* 视差背景层 */
+        /* 开场动画样式 */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a1929;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 1.5s ease;
+        }
+
+        .magic-loader {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 2rem;
+        }
+
+        .magic-circle {
+            position: absolute;
+            border: 2px solid rgba(135,206,235,0.8);
+            border-radius: 50%;
+            animation: pulse 3s infinite;
+        }
+
+        .magic-circle:nth-child(1) {
+            width: 100%;
+            height: 100%;
+            border-width: 4px;
+            animation-delay: 0.5s;
+        }
+
+        .magic-circle:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            border-width: 3px;
+            animation-delay: 1s;
+        }
+
+        .magic-circle:nth-child(3) {
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            animation-delay: 1.5s;
+        }
+
+        .loading-text {
+            color: #87CEEB;
+            font-size: 2rem;
+            font-family: '华文楷体', cursive;
+            text-shadow: 0 0 15px rgba(135,206,235,0.5);
+            opacity: 0;
+            animation: textGlow 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        @keyframes textGlow {
+            0%, 100% { opacity: 0.8; text-shadow: 0 0 15px rgba(135,206,235,0.8); }
+            50% { opacity: 0.4; text-shadow: 0 0 30px rgba(135,206,235,0.5); }
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            animation: twinkle 1.5s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* 主界面样式 */
         .parallax-background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 200%; /* 增加高度增强视差效果 */
+            height: 200%;
             background: 
                 linear-gradient(rgba(240, 250, 255, 0.3), rgba(230, 247, 255, 0.3)),
                 url('./图片/插画/图片1.png') center/cover no-repeat;
@@ -19,11 +108,11 @@
             will-change: transform;
         }
 
-        /* 魔法阵动画 */
         @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+
         @keyframes glow {
             0% { opacity: 0.8; }
             50% { opacity: 0.4; }
@@ -38,8 +127,7 @@
         }
 
         body {
-            background: 
-                linear-gradient(rgba(240, 250, 255, 0.3), rgba(230, 247, 255, 0.3));
+            background: linear-gradient(rgba(240, 250, 255, 0.3), rgba(230, 247, 255, 0.3));
             color: #2c4f5a;
             font-family: 'Segoe UI', '华文楷体', cursive;
             line-height: 1.6;
@@ -48,7 +136,6 @@
             overflow-x: hidden;
         }
 
-        /* 双层魔法阵背景 */
         body::before {
             content: '';
             position: fixed;
@@ -321,6 +408,23 @@
     </style>
 </head>
 <body>
+    <!-- 开场动画 -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="magic-loader">
+            <div class="star" style="top:15%; left:20%"></div>
+            <div class="star" style="top:30%; left:70%"></div>
+            <div class="star" style="top:80%; left:40%"></div>
+            <div class="magic-circle"></div>
+            <div class="magic-circle"></div>
+            <div class="magic-circle"></div>
+            <div style="position:absolute; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+                <span style="font-size:3em; color:#87CEEB; animation: rotate 8s linear infinite;">🌀</span>
+            </div>
+        </div>
+        <div class="loading-text">次元档案解禁中...</div>
+    </div>
+
+    <!-- 主界面内容 -->
     <div class="parallax-background"></div>
 
     <div class="header">
@@ -412,14 +516,36 @@
     </div>
 
     <script>
-        // 视差滚动效果
+        // 开场动画控制
+        window.addEventListener('load', () => {
+            const loader = document.querySelector('.magic-loader');
+            for(let i=0; i<30; i++){
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.top = Math.random()*100 + '%';
+                star.style.left = Math.random()*100 + '%';
+                star.style.animationDelay = Math.random()*2 + 's';
+                loader.appendChild(star);
+            }
+
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').remove();
+                    document.body.style.overflow = 'auto';
+                }, 1500);
+            }, 3000);
+        });
+
+        document.body.style.overflow = 'hidden';
+
+        // 主界面功能
         window.addEventListener('scroll', function() {
             const scrolled = window.pageYOffset;
             const parallax = document.querySelector('.parallax-background');
             parallax.style.transform = `translateY(${-scrolled * 0.5}px)`;
         });
 
-        // 魔法时间系统
         function updateMagicTime() {
             const timeContainer = document.getElementById('time-system');
             const now = new Date();
@@ -453,7 +579,6 @@
             `;
         }, 3000);
 
-        // 音乐播放器功能
         const bgm = document.getElementById('magic-bgm');
         let isFirstPlay = true;
         let playMode = 'list-loop';
