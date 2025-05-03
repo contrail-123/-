@@ -4,23 +4,25 @@
     <meta charset="UTF-8">
     <title>轨迹魔女见闻录 - 缇娜丝·蒂基特的次元档案</title>
     <style>
-        /* 开场动画样式 */
+            /* ==================== 开场动画样式 ==================== */
+        /* 加载屏幕容器 */
         .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0a1929;
-            z-index: 9999;
-            display: flex;
+            position: fixed;  /* 固定定位覆盖整个屏幕 */
+            top: 0;  /* 全屏尺寸和基础样式 */
+            left: 0;  /* 全屏尺寸和基础样式 */
+            width: 100%;  /* 全屏尺寸和基础样式 */
+            height: 100%;  /* 全屏尺寸和基础样式 */
+            background: #0a1929;  /* 深蓝色背景 */
+            z-index: 9999;  /* 确保在最顶层 */
+            display: flex;  /* 使用弹性布局居中内容 */
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            opacity: 1;
-            transition: opacity 1.5s ease;
+            opacity: 1;  /* 初始不透明 */
+            transition: opacity 1.5s ease;  /* 渐隐过渡效果 */
         }
 
+         /* 加载动画容器 */
         .magic-loader {
             position: relative;
             width: 200px;
@@ -28,11 +30,12 @@
             margin-bottom: 2rem;
         }
 
+        /* 魔法圆圈动画效果 */
         .magic-circle {
             position: absolute;
-            border: 2px solid rgba(135,206,235,0.8);
-            border-radius: 50%;
-            animation: pulse 3s infinite;
+            border: 2px solid rgba(135,206,235,0.8);  /* 天蓝色边框 */
+            border-radius: 50%;  /* 圆形 */
+            animation: pulse 3s infinite;  /* 脉冲动画 */
         }
 
         .magic-circle:nth-child(1) {
@@ -59,26 +62,30 @@
             animation-delay: 1.5s;
         }
 
+        /* 加载文字样式 */
         .loading-text {
-            color: #87CEEB;
-            font-size: 2rem;
-            font-family: '华文楷体', cursive;
-            text-shadow: 0 0 15px rgba(135,206,235,0.5);
+            color: #87CEEB;  /* 天蓝色文字 */
+            font-size: 2rem;  /* 字体大小 */
+            font-family: '华文楷体', cursive; /* 中文字体 */
+            text-shadow: 0 0 15px rgba(135,206,235,0.5);  /* 发光效果 */
             opacity: 0;
-            animation: textGlow 2s infinite;
+            animation: textGlow 2s infinite;  /* 文字闪烁动画 */
         }
 
+        /* 脉冲动画关键帧 */
         @keyframes pulse {
             0% { transform: scale(1); opacity: 0.8; }
             50% { transform: scale(1.2); opacity: 0.4; }
             100% { transform: scale(1); opacity: 0.8; }
         }
 
+        /* 文字闪烁动画关键帧数 */
         @keyframes textGlow {
             0%, 100% { opacity: 0.8; text-shadow: 0 0 15px rgba(135,206,235,0.8); }
             50% { opacity: 0.4; text-shadow: 0 0 30px rgba(135,206,235,0.5); }
         }
 
+        /* 加载星星闪烁 */
         .star {
             position: absolute;
             background: #fff;
@@ -88,52 +95,56 @@
             animation: twinkle 1.5s infinite;
         }
 
+         /* 星星闪烁关键帧 */
         @keyframes twinkle {
             0%, 100% { opacity: 0.3; }
             50% { opacity: 1; }
         }
 
-        /* 主界面样式 */
-        .parallax-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 200%;
-            background: 
-                linear-gradient(rgba(240, 250, 255, 0.3), rgba(230, 247, 255, 0.3)),
-                url('./图片/插画/图片1.png') center/cover no-repeat;
-            z-index: -2;
-            transform: translateZ(0);
-            will-change: transform;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes glow {
-            0% { opacity: 0.8; }
-            50% { opacity: 0.4; }
-            100% { opacity: 0.8; }
-        }
-
+        /* ==================== 主界面样式 ==================== */
         :root {
-            --primary-color: #f0faff;
+            --primary-color: #f0faff;  /* 主色调 */
             --secondary-color: #e6f7ff;
-            --accent-color: #87CEEB;
+            --accent-color: #87CEEB;  /* 强调色（天蓝） */
             --magic-circle-color: rgba(135,206,235,0.15);
         }
 
+        /* 视差层 - 最底层 */
+        .parallax-background {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 200%;
+          background: 
+            linear-gradient(45deg, 
+              rgba(173, 216, 230, 0.2) 25%,
+              transparent 25%,
+              transparent 75%,
+              rgba(135, 206, 250, 0.2) 75% 
+            ),
+            linear-gradient(45deg, 
+              rgba(70, 130, 180, 0.2) 25%,
+              transparent 25%,
+              transparent 75%,
+              rgba(25, 25, 112, 0.2) 75%
+            ),
+            linear-gradient(
+              rgba(240, 250, 255, 0), 
+              rgba(230, 247, 255, 0)
+            ),
+            linear-gradient(rgba(240, 250, 255, 0.3), rgba(230, 247, 255, 0.3)),
+            url('./图片/插画/图片1.png') center/cover no-repeat;
+          z-index: -3;
+          will-change: transform;
+        }
+
+        /* Body背景层 - 第二层 */
         body {
-            background: linear-gradient(rgba(240, 250, 255, 0.3), rgba(230, 247, 255, 0.3));
-            color: #2c4f5a;
-            font-family: 'Segoe UI', '华文楷体', cursive;
-            line-height: 1.6;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
+          position: relative;
+          z-index: -2;
+          min-height: 100vh; 
+          background: none !important;
         }
 
         body::before {
@@ -147,7 +158,7 @@
             opacity: 0.15;
             animation: rotate 180s linear infinite;
             transform: translate(-50%, -50%);
-            z-index: -1;
+            z-index: 0;
         }
 
         body::after {
@@ -164,13 +175,41 @@
             z-index: -1;
         }
 
+        /* 头部样式 */
         .header {
             text-align: center;
             padding: 2rem;
-            background: rgba(255,255,255,0.66);
-            border-bottom: 3px solid var(--accent-color);
+            background: rgba(255,255,255,0.66);  /* 半透明白色背景 */
+            border-bottom: 3px solid var(--accent-color);  /* 天蓝边框 */
             box-shadow: 0 4px 20px rgba(135,206,235,0.1);
-            text-shadow: 0 0 10px rgba(135,206,235,0.2);
+            backdrop-filter: blur(2px);  /* 背景模糊效果 */
+        }
+
+        .header h1 {
+            font-size: 3.8rem;
+            margin-bottom: 0.8rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(135,180,235,0.4);
+            background: linear-gradient(45deg, #87CEEB, #5f9ea0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: '华文楷体', cursive;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: #5f9ea0;
+            text-shadow: 0 0 10px rgba(135,206,235,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+                letter-spacing: 1px;
+            }
+            .header p {
+                font-size: 1.1rem;
+            }
         }
 
         .magic-time {
@@ -188,12 +227,6 @@
             animation: glow 2s ease-in-out infinite;
         }
         
-        .magic-time::before {
-            content: '⏳';
-            margin-right: 8px;
-            filter: hue-rotate(45deg);
-        }
-
         .nav {
             display: flex;
             justify-content: center;
@@ -201,6 +234,7 @@
             padding: 1rem;
             background: rgba(255,255,255,0.66);
             box-shadow: 0 2px 15px rgba(135,206,235,0.1);
+            backdrop-filter: blur(2px);
         }
 
         .nav a {
@@ -242,6 +276,7 @@
             box-shadow: 0 0 30px rgba(135,206,235,0.1);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(2px);
         }
 
         .character-card::before {
@@ -254,11 +289,13 @@
             opacity: 0.3;
         }
 
+         /* ==================== 故事时间线区域 ==================== */
         .timeline {
             position: relative;
-            max-width: 1200px;
+            max-width: 1200px;  /* 限制最大宽度 */
             margin: 0 auto;
             padding: 2rem;
+            backdrop-filter: blur(2px);  /* 背景模糊 */
         }
 
         .timeline-item {
@@ -281,17 +318,19 @@
             box-shadow: 0 0 15px rgba(135,206,235,0.3);
         }
 
+         /* ==================== 音乐播放器样式 ==================== */
         .music-control {
-            position: fixed;
+            position: fixed;  /* 固定在右下角 */
             bottom: 20px;
             right: 20px;
-            background: rgba(255,255,255,0.85);
-            border: 1px solid #87CEEB;
-            border-radius: 15px;
-            padding: 15px;
+            background: rgba(255,255,255,0.85);  /* 半透明背景 */
+            border: 1px solid #87CEEB; /* 天蓝边框 */
+            border-radius: 15px;  /* 圆角 */
+            padding: 15px;  /* 强模糊效果 */
             box-shadow: 0 0 20px rgba(135,206,235,0.2);
             width: 250px;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease;  /* 折叠动画 */
+            backdrop-filter: blur(5px);
         }
 
         .music-control.collapsed {
@@ -405,32 +444,43 @@
             transition: transform 0.3s ease;
             margin-right: 8px;
         }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes glow {
+            0% { opacity: 0.8; }
+            50% { opacity: 0.4; }
+            100% { opacity: 0.8; }
+        }
     </style>
 </head>
 <body>
-    <!-- 开场动画 -->
+    <!-- ==================== 开场动画 ==================== -->
     <div class="loading-screen" id="loadingScreen">
-        <div class="magic-loader">
+        <div class="magic-loader">  <!-- 动态生成的星星 -->
             <div class="star" style="top:15%; left:20%"></div>
             <div class="star" style="top:30%; left:70%"></div>
             <div class="star" style="top:80%; left:40%"></div>
-            <div class="magic-circle"></div>
+            <div class="magic-circle"></div>   <!-- 魔法圆圈 -->
             <div class="magic-circle"></div>
             <div class="magic-circle"></div>
             <div style="position:absolute; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
-                <span style="font-size:3em; color:#87CEEB; animation: rotate 8s linear infinite;">🌀</span>
+                <span style="font-size:3em; color:#87CEEB; animation: rotate 8s linear infinite;">🌀</span>   <!-- 旋转的魔法符号 -->
             </div>
         </div>
         <div class="loading-text">次元档案解禁中...</div>
     </div>
 
-    <!-- 主界面内容 -->
     <div class="parallax-background"></div>
 
+    <!-- ==================== 主内容区 ==================== -->
     <div class="header">
-        <h1>🌌轨迹魔女见闻录</h1>
+        <h1>轨迹魔女见闻录</h1>
         <p>——跨越次元的魔女观测者档案</p>
-        <div id="time-system" class="magic-time"></div>
+        <div id="time-system" class="magic-time"></div>  <!-- 动态时间显示 -->
     </div>
 
     <nav class="nav">
@@ -476,12 +526,13 @@
         </div>
     </div>
 
+    <!-- ==================== 音乐播放器 ==================== -->
     <div class="music-control">
         <div class="music-header">
             <h4 style="margin:0;color:#87CEEB;">🎵 魔法旋律</h4>
             <div>
-                <button class="mode-btn" onclick="toggleMode()">🔁</button>
-                <button class="toggle-btn" onclick="toggleCollapse()">▼</button>
+                <button class="mode-btn" onclick="toggleMode()">🔁</button>  <!-- 播放模式切换 -->
+                <button class="toggle-btn" onclick="toggleCollapse()">▼</button>  <!-- 折叠按钮 -->
                 <button class="music-btn" onclick="toggleMusic()">🎶</button>
             </div>
         </div>
@@ -510,14 +561,15 @@
             </div>
         </div>
 
-        <audio id="magic-bgm" ontimeupdate="updateProgress()" onloadedmetadata="updateDuration()">
-            您的浏览器不支持音频播放
+        <audio id="magic-bgm" ontimeupdate="updateProgress()" onloadedmetadata="updateDuration()">  <!-- 音频元素 -->
+            您的浏览器不支持音频播放  <!-- 回退提示 -->
         </audio>
     </div>
 
     <script>
-        // 开场动画控制
+        // ==================== 加载动画控制 ====================
         window.addEventListener('load', () => {
+            // 动态生成星星
             const loader = document.querySelector('.magic-loader');
             for(let i=0; i<30; i++){
                 const star = document.createElement('div');
@@ -529,7 +581,7 @@
             }
 
             setTimeout(() => {
-                document.getElementById('loadingScreen').style.opacity = '0';
+                document.getElementById('loadingScreen').style.opacity = '0'; // 渐隐动画
                 setTimeout(() => {
                     document.getElementById('loadingScreen').remove();
                     document.body.style.overflow = 'auto';
@@ -539,13 +591,7 @@
 
         document.body.style.overflow = 'hidden';
 
-        // 主界面功能
-        window.addEventListener('scroll', function() {
-            const scrolled = window.pageYOffset;
-            const parallax = document.querySelector('.parallax-background');
-            parallax.style.transform = `translateY(${-scrolled * 0.5}px)`;
-        });
-
+        // ==================== 时间显示功能 ====================
         function updateMagicTime() {
             const timeContainer = document.getElementById('time-system');
             const now = new Date();
@@ -562,9 +608,9 @@
             const magicSymbol = ['❄️', '🌌', '💧', '🌀'][Math.floor(Math.random()*4)];
             
             timeContainer.innerHTML = `
-                ${magicSymbol} ${year}年${month}月${date}日 ${week}
-                <div style="font-size:0.9em;margin-top:5px;">${hours}:${minutes}:${seconds}</div>
-                ${magicSymbol}
+                <span>${magicSymbol} ${year}年${month}月${date}日 ${week}</span>
+                <span style="font-size:0.9em; margin-left:10px;">${hours}:${minutes}:${seconds}</span>
+                <span>${magicSymbol}</span>
             `;
         }
 
@@ -579,6 +625,7 @@
             `;
         }, 3000);
 
+         // ==================== 音乐播放器逻辑 ====================
         const bgm = document.getElementById('magic-bgm');
         let isFirstPlay = true;
         let playMode = 'list-loop';
@@ -694,6 +741,13 @@
             isCollapsed = !isCollapsed;
             document.querySelector('.toggle-btn').textContent = isCollapsed ? '▲' : '▼';
         }
+
+         // ==================== 视差滚动效果 ====================
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.parallax-background');
+            parallax.style.transform = `translateY(${-scrolled * 0.5}px)`;  // 背景移动速度减半
+        });
     </script>
 </body>
 </html>
