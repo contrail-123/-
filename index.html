@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>轨迹魔女见闻录 - 缇娜丝·蒂基特的次元档案</title>
+    <title>轨迹魔女见闻录 - 缇娜丝·蒂基特的轨迹档案</title>
     <style>
             /* ==================== 开场动画样式 ==================== */
         /* 加载屏幕容器 */
@@ -12,17 +12,23 @@
             left: 0;  /* 全屏尺寸和基础样式 */
             width: 100%;  /* 全屏尺寸和基础样式 */
             height: 100%;  /* 全屏尺寸和基础样式 */
-            background: #0a1929;  /* 深蓝色背景 */
+            background: linear-gradient(160deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);  /* 蓝白渐变背景 */
             z-index: 9999;  /* 确保在最顶层 */
             display: flex;  /* 使用弹性布局居中内容 */
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            opacity: 1;  /* 初始不透明 */
-            transition: opacity 1.5s ease;  /* 渐隐过渡效果 */
+            overflow: hidden;
+            transition: opacity 1.5s ease-out;
+            opacity: 1;  /* 默认可见 */
         }
 
-         /* 加载动画容器 */
+         /* 触发隐藏的类 */
+        .loading-screen.hide {
+          opacity: 0;  /* 透明度渐变为0 */
+        }
+
+        /* 加载动画容器 */
         .magic-loader {
             position: relative;
             width: 200px;
@@ -36,6 +42,7 @@
             border: 2px solid rgba(135,206,235,0.8);  /* 天蓝色边框 */
             border-radius: 50%;  /* 圆形 */
             animation: pulse 3s infinite;  /* 脉冲动画 */
+            opacity: 0;
         }
 
         .magic-circle:nth-child(1) {
@@ -62,21 +69,31 @@
             animation-delay: 1.5s;
         }
 
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* 新增波纹扩散动画 */
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
         /* 加载文字样式 */
         .loading-text {
             color: #87CEEB;  /* 天蓝色文字 */
             font-size: 2rem;  /* 字体大小 */
             font-family: '华文楷体', cursive; /* 中文字体 */
             text-shadow: 0 0 15px rgba(135,206,235,0.5);  /* 发光效果 */
-            opacity: 0;
             animation: textGlow 2s infinite;  /* 文字闪烁动画 */
-        }
-
-        /* 脉冲动画关键帧 */
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.2); opacity: 0.4; }
-            100% { transform: scale(1); opacity: 0.8; }
         }
 
         /* 文字闪烁动画关键帧数 */
@@ -182,7 +199,6 @@
             background: rgba(255,255,255,0.66);  /* 半透明白色背景 */
             border-bottom: 3px solid var(--accent-color);  /* 天蓝边框 */
             box-shadow: 0 4px 20px rgba(135,206,235,0.1);
-            backdrop-filter: blur(2px);  /* 背景模糊效果 */
         }
 
         .header h1 {
@@ -461,19 +477,17 @@
     <!-- ==================== 开场动画 ==================== -->
     <div class="loading-screen" id="loadingScreen">
         <div class="magic-loader">  <!-- 动态生成的星星 -->
-            <div class="star" style="top:15%; left:20%"></div>
-            <div class="star" style="top:30%; left:70%"></div>
-            <div class="star" style="top:80%; left:40%"></div>
             <div class="magic-circle"></div>   <!-- 魔法圆圈 -->
             <div class="magic-circle"></div>
             <div class="magic-circle"></div>
-            <div style="position:absolute; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
-                <span style="font-size:3em; color:#87CEEB; animation: rotate 8s linear infinite;">🌀</span>   <!-- 旋转的魔法符号 -->
-            </div>
+            <div class="star" style="top:15%; left:20%"></div>
+            <div class="star" style="top:30%; left:70%"></div>
+            <div class="star" style="top:80%; left:40%"></div>
         </div>
-        <div class="loading-text">次元档案解禁中...</div>
+        <div class="loading-text">轨迹回声解禁中...</div>
     </div>
 
+    <!-- ==================== 背景加载 ==================== -->
     <div class="parallax-background"></div>
 
     <!-- ==================== 主内容区 ==================== -->
@@ -569,24 +583,47 @@
     <script>
         // ==================== 加载动画控制 ====================
         window.addEventListener('load', () => {
-            // 动态生成星星
             const loader = document.querySelector('.magic-loader');
-            for(let i=0; i<30; i++){
+            
+            // 生成动态星星
+            for(let i = 0; i < 30; i++){
                 const star = document.createElement('div');
                 star.className = 'star';
-                star.style.top = Math.random()*100 + '%';
-                star.style.left = Math.random()*100 + '%';
-                star.style.animationDelay = Math.random()*2 + 's';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
                 loader.appendChild(star);
             }
 
+            // 3秒后启动消失动画
             setTimeout(() => {
-                document.getElementById('loadingScreen').style.opacity = '0'; // 渐隐动画
+                const loadingScreen = document.getElementById('loadingScreen');
+                const circles = document.querySelectorAll('.magic-circle');
+                const text = document.querySelector('.loading-text');
+
+                // 波纹扩散动画
+                circles.forEach((circle, index) => {
+                    setTimeout(() => {
+                        circle.style.animation = `ripple 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards`;
+                    }, index * 200); // 每个圆圈间隔200ms启动
+                });
+
+                // 渐隐过渡
                 setTimeout(() => {
-                    document.getElementById('loadingScreen').remove();
+                    loadingScreen.style.opacity = '0';
+                }, 1800);
+
+                // 文字和背景渐隐
+                setTimeout(() => {
+                    text.style.animation = 'fadeOut 1s forwards';
+                }, 1000);
+
+                // 移除加载层
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
                     document.body.style.overflow = 'auto';
-                }, 1500);
-            }, 3000);
+                }, 3000); // 开场动画淡出持续时间
+            }, 3000); // 开场动画过程持续时间
         });
 
         document.body.style.overflow = 'hidden';
