@@ -282,6 +282,61 @@
             opacity: 1;
         }
 
+        /* 魔女手札pdf按按钮特效 */
+        .nav a#pdf-reader::after {
+            content: '✨';
+            right: -15px;
+        }
+
+        /* 添加魔女手札PDF按钮特殊动画 */
+        .nav a#pdf-reader:hover {
+            animation: parchment-glow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes parchment-glow {
+            0% { box-shadow: 0 0 5px rgba(245,222,179,0.5); }
+            50% { box-shadow: 0 0 15px rgba(245,222,179,0.8); }
+            100% { box-shadow: 0 0 5px rgba(245,222,179,0.5); }
+}
+        /* PDF预览浮窗样式 */
+        .magic-pdf-viewer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 90vh;
+            background: rgba(255,255,255,0.95);
+            border: 3px solid #87CEEB;
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(135,206,235,0.3);
+            z-index: 99999;
+            display: none;
+        }
+
+        .magic-pdf-viewer iframe {
+            width: 100%;
+            height: calc(100% - 40px);
+            border-radius: 12px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #87CEEB;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        /* 角色介绍 */
         .character-card {
             max-width: 800px;
             margin: 2rem auto;
@@ -502,6 +557,7 @@
         <a href="#abilities">魔导能力</a>
         <a href="#timeline">次元轨迹</a>
         <a href="#artifacts">秘宝图鉴</a>
+        <a href="./pdf/轨迹魔女见闻录.pdf" target="_blank" id="pdf-reader">📜 魔女手札</a>
     </nav>
 
     <div class="character-card" id="profile">
@@ -579,6 +635,11 @@
             您的浏览器不支持音频播放  <!-- 回退提示 -->
         </audio>
     </div>
+    <!-- ==================== PDF预览浮窗 ==================== -->
+    <div id="pdf-viewer" class="magic-pdf-viewer">
+        <button class="close-btn" onclick="closePDF()">✖️</button>
+        <iframe src="" frameborder="0"></iframe>
+    </div>
 
     <script>
         // ==================== 加载动画控制 ====================
@@ -611,7 +672,7 @@
                 // 渐隐过渡
                 setTimeout(() => {
                     loadingScreen.style.opacity = '0';
-                }, 1800);
+                }, 1000);
 
                 // 文字和背景渐隐
                 setTimeout(() => {
@@ -662,7 +723,7 @@
             `;
         }, 3000);
 
-         // ==================== 音乐播放器逻辑 ====================
+        // ==================== 音乐播放器逻辑 ====================
         const bgm = document.getElementById('magic-bgm');
         let isFirstPlay = true;
         let playMode = 'list-loop';
@@ -779,11 +840,30 @@
             document.querySelector('.toggle-btn').textContent = isCollapsed ? '▲' : '▼';
         }
 
-         // ==================== 视差滚动效果 ====================
+        // ==================== 视差滚动效果 ====================
         window.addEventListener('scroll', function() {
             const scrolled = window.pageYOffset;
             const parallax = document.querySelector('.parallax-background');
             parallax.style.transform = `translateY(${-scrolled * 0.5}px)`;  // 背景移动速度减半
+        });
+
+        // ==================== PDF预览功能 ====================
+        function showPDF() {
+            const viewer = document.getElementById('pdf-viewer');
+            viewer.style.display = 'block';
+            viewer.querySelector('iframe').src = './pdf/轨迹魔女见闻录.pdf';
+        }
+
+        function closePDF() {
+            const viewer = document.getElementById('pdf-viewer');
+            viewer.style.display = 'none';
+            viewer.querySelector('iframe').src = '';
+        }
+
+        // 为PDF按钮添加点击事件
+        document.querySelector('#pdf-reader').addEventListener('click', function(e) {
+            e.preventDefault();
+            showPDF();
         });
     </script>
 </body>
