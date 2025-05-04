@@ -124,6 +124,7 @@
             --secondary-color: #e6f7ff;
             --accent-color: #87CEEB;  /* 强调色（天蓝） */
             --magic-circle-color: rgba(135,206,235,0.15);
+            cursor:url('./图片/其它/鼠标图片-初音.png'),auto;
         }
 
         /* 视差层 - 最底层 */
@@ -547,17 +548,21 @@
 
     <!-- ==================== 主内容区 ==================== -->
     <div class="header">
-        <h1>轨迹魔女见闻录</h1>
-        <p>——跨越次元的魔女观测者档案</p>
+        <h1>轨迹秘契结社</h1>
+        <p>——我们丈量大地时，也在被星辰丈量</p>
         <div id="time-system" class="magic-time"></div>  <!-- 动态时间显示 -->
     </div>
 
     <nav class="nav">
-        <a href="#profile">魔女档案</a>
-        <a href="#abilities">魔导能力</a>
-        <a href="#timeline">次元轨迹</a>
+        <a href="#profile">结社介绍</a>
+        <a href="#profile">人物档案</a>
+        <a href="#profile">能力介绍</a>
+        <a href="#timeline">轨迹见闻</a>
         <a href="#artifacts">秘宝图鉴</a>
         <a href="./pdf/轨迹魔女见闻录.pdf" target="_blank" id="pdf-reader">📜 魔女手札</a>
+        <a href="#artifacts">大图书馆</a>
+        <a href="#artifacts">休闲游戏</a>
+        <a href="#artifacts">联系方式</a>
     </nav>
 
     <div class="character-card" id="profile">
@@ -643,7 +648,21 @@
 
     <script>
         // ==================== 加载动画控制 ====================
+        // 提前初始化音频元素
+        const bgm = document.getElementById('magic-bgm');
+        // 直接设置播放源为雪玫瑰的誓约
+        bgm.src = '音乐/雪玫瑰的誓约.MP3';
+        bgm.volume = 0.5;
+
+        // 添加用户点击事件监听
+        document.addEventListener('click', handleFirstPlay);
+
         window.addEventListener('load', () => {
+            // 在加载动画开始时尝试播放音乐
+            bgm.play().catch(error => {
+                console.log('自动播放被阻止，将在用户交互后播放');
+            });
+
             const loader = document.querySelector('.magic-loader');
             
             // 生成动态星星
@@ -687,6 +706,15 @@
             }, 3000); // 开场动画过程持续时间
         });
 
+        // 新增首次播放处理函数
+        function handleFirstPlay() {
+            bgm.play()
+                .then(() => {
+                    document.removeEventListener('click', handleFirstPlay);
+                })
+                .catch(console.error);
+        }
+
         document.body.style.overflow = 'hidden';
 
         // ==================== 时间显示功能 ====================
@@ -724,7 +752,6 @@
         }, 3000);
 
         // ==================== 音乐播放器逻辑 ====================
-        const bgm = document.getElementById('magic-bgm');
         let isFirstPlay = true;
         let playMode = 'list-loop';
         const songs = [
@@ -741,14 +768,14 @@
             });
         });
 
-        document.addEventListener('click', initMusic, { once: true });
-
         function initMusic() {
-            bgm.volume = 0.5;
-            bgm.play().catch(() => {
-                if(confirm('是否允许播放背景音乐？')) bgm.play();
-            });
+            // 已提前设置好音源，无需重复操作
+            document.querySelector('.music-btn').textContent = '🎶';
+            document.getElementById('current-song').textContent = '当前曲目：雪玫瑰的誓约';
         }
+
+        // 在开场动画结束后初始化播放器状态
+        setTimeout(initMusic, 3000);
 
         function toggleMusic() {
             if(isFirstPlay) {
@@ -865,6 +892,14 @@
             e.preventDefault();
             showPDF();
         });
+
+        // 开场动画点击屏幕播放音乐
+        document.getElementById('loadingScreen').addEventListener('click', () => {
+            bgm.play().catch(() => {
+                alert('请点击屏幕以允许播放背景音乐');
+            });
+        });
+
     </script>
 </body>
 </html>
