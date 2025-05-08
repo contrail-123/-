@@ -338,7 +338,7 @@
             border: 3px solid #87CEEB;
             border-radius: 15px;
             box-shadow: 0 0 50px rgba(135,206,235,0.3);
-            z-index: 99999;
+            z-index: 100000;
             display: none;
         }
 
@@ -582,17 +582,26 @@
 
         .tarot-card-container {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            perspective: 1000px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
             display: none;
+            justify-content: center;
+            align-items: center;
             z-index: 99999;
         }
 
+        .tarot-triple {
+            display: flex;
+            gap: 30px;
+            transform: scale(0.9);
+        }
+
         .tarot-card {
-            width: 280px;
-            height: 480px;
+            width: 240px;
+            height: 420px;
             position: relative;
             transform-style: preserve-3d;
             transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
@@ -614,9 +623,10 @@
             align-items: center;
             justify-content: center;
             background-size: cover;
+            box-sizing: border-box; /* ← 确保内边距不影响尺寸 */
+            padding: 0; /* ← 统一清除内边距 */
         }
 
-        /* 修改后的塔罗牌正面样式 */
         .tarot-front {
             background: linear-gradient(45deg, #f0faff 0%, #e6f7ff 100%);
             transform: rotateY(0deg);
@@ -635,11 +645,10 @@
             opacity: 0.3;
         }
 
-        /* 新增逆位旋转样式 */
         .tarot-image.reversed {
             transform: rotate(180deg);
             transform-origin: center center;
-}
+        }
 
         .tarot-back {
             background: white;
@@ -647,13 +656,14 @@
             padding: 20px;
             flex-direction: column;
             background: linear-gradient(45deg, #f0faff, #e6f7ff);
+            box-sizing: border-box; /* 内边距包含在总尺寸内 */
         }
 
         .tarot-image {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
-            margin-bottom: 15px;
+            height: calc(100% - 30px); /* 补偿反面外边距 */
+            object-fit: cover; /* 填充整个区域 */
+            margin: 0;
         }
 
         .tarot-reading {
@@ -692,6 +702,121 @@
             }
         }
 
+        /* ==================== 大图书馆 ==================== */
+        .library-section {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255,255,255,0.85);
+            border: 2px solid var(--accent-color);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(135,206,235,0.1);
+        }
+
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .pdf-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(135,206,235,0.2);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .pdf-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pdf-thumbnail {
+            width: 100%;
+            height: 320px;
+            background: #f5f5f5;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pdf-thumbnail canvas {
+            width: 100%!important;
+            height: 100%!important;
+            object-fit: cover;
+        }
+
+        .pdf-info {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .pdf-title {
+            color: #5f9ea0;
+            font-family: '华文楷体';
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .loading-thumbnail {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 3px solid #87CEEB;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: rotate 1s linear infinite;
+        }
+
+        /* ==================== 大图书馆弹窗 ==================== */
+        .library-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background: rgba(255,255,255,0.95);
+            border: 3px solid #87CEEB;
+            border-radius: 15px;
+            padding: 2rem;
+            width: 80%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 0 50px rgba(135,206,235,0.3);
+            position: relative;
+        }
+
+        .library-grid-modal {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        /* 书籍悬浮特效 */
+        .magic-hover {
+            transition: all 0.3s ease;
+            cursor: url('./图片/其它/hand.gif'), pointer;
+        }
+
+        .magic-hover:hover {
+            transform: translateY(-5px) rotateZ(2deg);
+            box-shadow: 0 8px 25px rgba(135,206,235,0.4);
+        }
+
     </style>
 </head>
 <body>
@@ -725,7 +850,7 @@
         <a href="#timeline">轨迹见闻</a>
         <a href="#artifacts">秘宝图鉴</a>
         <a href="./pdf/轨迹魔女见闻录.pdf" target="_blank" id="pdf-reader">📜 魔女手札</a>
-        <a href="#artifacts">大图书馆</a>
+        <a href="javascript:void(0)" onclick="loadLibrary()">大图书馆</a>
         <a href="#artifacts">休闲游戏</a>
         <a href="#artifacts">联系方式</a>
     </nav>
@@ -818,17 +943,49 @@
     </div>
 
     <div class="tarot-card-container" id="tarotContainer">
-        <div class="tarot-card" id="tarotCard">
-            <div class="tarot-card-face tarot-front"></div>
-            <div class="tarot-card-face tarot-back">
-                <img class="tarot-image" id="tarotImage" src="" alt="塔罗牌">
-                <div class="tarot-reading">
-                    <h3 id="tarotName"></h3>
-                    <p id="tarotMeaning"></p>
+        <div class="tarot-triple">
+            <div class="tarot-card">
+                <div class="tarot-card-face tarot-front"></div>
+                <div class="tarot-card-face tarot-back">
+                    <img class="tarot-image" src="" alt="塔罗牌">
+                    <div class="tarot-reading">
+                        <h3 class="tarot-name"></h3>
+                        <p class="tarot-meaning"></p>
+                    </div>
                 </div>
-                <div class="star-particles" id="starParticles"></div>
+            </div>
+            <div class="tarot-card">
+                <div class="tarot-card-face tarot-front"></div>
+                <div class="tarot-card-face tarot-back">
+                    <img class="tarot-image" src="" alt="塔罗牌">
+                    <div class="tarot-reading">
+                        <h3 class="tarot-name"></h3>
+                        <p class="tarot-meaning"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="tarot-card">
+                <div class="tarot-card-face tarot-front"></div>
+                <div class="tarot-card-face tarot-back">
+                    <img class="tarot-image" src="" alt="塔罗牌">
+                    <div class="tarot-reading">
+                        <h3 class="tarot-name"></h3>
+                        <p class="tarot-meaning"></p>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="star-particles" id="starParticles"></div>
+    </div>
+
+    <!-- ==================== 大图书馆弹窗 ==================== -->
+    <div class="library-modal" id="libraryModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeLibrary()">✖️</button>
+            <h2 style="color:#5f9ea0;text-align:center;font-family:'华文楷体'">📚 大图书馆</h2>
+            <div class="library-grid-modal"></div>
+        </div>
+        <div class="star-particles"></div>
     </div>
 
     <script>
@@ -1242,45 +1399,127 @@
 
         function drawTarot() {
             const container = document.getElementById('tarotContainer');
-            const card = document.getElementById('tarotCard');
-            const isReversed = Math.random() > 0.5;
+            const triple = container.querySelector('.tarot-triple');
+            const cards = triple.querySelectorAll('.tarot-card');
+        
+            // 点击容器外区域关闭
+            container.onclick = (e) => {
+                if (!triple.contains(e.target)) {
+                    container.style.display = 'none';
+                }
+            };
 
-            const selected = tarotDeck[Math.floor(Math.random() * tarotDeck.length)];
-            const tarotImage = document.getElementById('tarotImage');
-
-            tarotImage.classList.remove('reversed');
-            if(isReversed) {
-                tarotImage.classList.add('reversed');
+            // 生成不重复的三张牌
+            const selectedCards = [];
+            while(selectedCards.length < 3) {
+                const card = tarotDeck[Math.floor(Math.random() * tarotDeck.length)];
+                if(!selectedCards.includes(card)) selectedCards.push(card);
             }
 
-            tarotImage.src = selected.image;
-            document.getElementById('tarotName').textContent = `${selected.name} ${isReversed ? '逆位' : '正位'}`;
-            document.getElementById('tarotMeaning').textContent = isReversed ? selected.reversed : selected.upright;
+            cards.forEach((card, index) => {
+                const isReversed = Math.random() > 0.5;
+                const tarotImg = card.querySelector('.tarot-image');
+                const tarotName = card.querySelector('.tarot-name');
+                const tarotMeaning = card.querySelector('.tarot-meaning');
+                const selected = selectedCards[index];
 
-            card.classList.remove('flipped');
-            container.style.display = 'block';
-    
-            // 触发重绘确保元素可见
-            container.offsetHeight;
+                tarotImg.classList.toggle('reversed', isReversed);
+                tarotImg.src = selected.image;
+                tarotName.textContent = `${selected.name} ${isReversed ? '逆位' : '正位'}`;
+                tarotMeaning.textContent = isReversed ? selected.reversed : selected.upright;
 
-            // 开始翻转动画
-            setTimeout(() => {
-                card.classList.add('flipped');
-            }, 10);
+                // 重置动画状态
+                card.style.animation = 'none';
+                card.offsetHeight;
+                card.style.animation = 'cardAppear 0.8s ease-out forwards';
 
-            // 在翻转动画进行中创建星星（延迟到动画开始后）
-            setTimeout(() => {
-                createStarParticles();
-                card.offsetWidth; // 触发重绘
-            }, 500); // 调整延迟时间至动画开始后
+                // 点击单个卡片翻转
+                card.onclick = () => {
+                    card.classList.toggle('flipped');
+                    createStarParticles();
+                };
+            });
 
-            container.onclick = () => {
-                card.classList.remove('flipped');
-                setTimeout(() => {
-                    container.style.display = 'none';
-                }, 1000);
-            };
+            container.style.display = 'flex';
+            createStarParticles();
         }
+        // ==================== 大图书馆 ====================
+
+        // 在脚本中添加PDF点击事件监听
+        document.querySelector('#pdf-reader').addEventListener('click', function(e) {
+            e.preventDefault(); // 阻止默认跳转行为
+            showPDF(this.href); // 使用链接的href路径显示PDF
+        });
+
+        // 显示PDF查看器
+        function showPDF(url) {
+            const viewer = document.getElementById('pdf-viewer');
+            viewer.style.display = 'block';
+            viewer.querySelector('iframe').src = url;
+        }
+
+        // 大图书馆数据
+        const libraryCollection = [
+            {
+                title: "内在的天空",
+                pdf: "pdf/内在的天空.pdf",
+                thumb: "书籍封面/内在的天空.png"
+            },
+            {
+                title: "德鲁伊魔法手册", 
+                pdf: "pdf/德鲁伊魔法手册.pdf",
+                thumb: "书籍封面/德鲁伊魔法手册.png"
+            },
+            {
+                title: "威卡魔法手册",
+                pdf: "pdf/威卡魔法手册.pdf",
+                thumb: "书籍封面/威卡魔法手册.png"
+            },
+            {
+                title: "所罗门的钥匙",
+                pdf: "pdf/所罗门的钥匙.pdf",
+                thumb: "书籍封面/所罗门的钥匙.png"
+            }
+        ];
+
+        // 打开大图书馆
+        function loadLibrary() {
+            const modal = document.getElementById('libraryModal');
+            const grid = modal.querySelector('.library-grid-modal');
+    
+            // 清空现有内容
+            grid.innerHTML = '';
+    
+            // 动态生成书籍
+            libraryCollection.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'pdf-card magic-hover';
+                card.innerHTML = `
+                    <div class="pdf-thumbnail" 
+                         style="background: url('${book.thumb}') center/cover;">
+                    </div>
+                    <div class="pdf-info">
+                        <p class="pdf-title">${book.title}</p>
+                    </div>
+                `;
+                card.addEventListener('click', () => showPDF(book.pdf));
+                grid.appendChild(card);
+            });
+    
+            // 显示弹窗
+            modal.style.display = 'flex';
+            createStarParticles();
+        }
+
+        // 关闭大图书馆
+        function closeLibrary() {
+            document.getElementById('libraryModal').style.display = 'none';
+        }
+
+        // 点击外部关闭
+        document.getElementById('libraryModal').addEventListener('click', function(e) {
+            if(e.target === this) closeLibrary();
+        });
 
     </script>
 </body>
