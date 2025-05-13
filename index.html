@@ -1021,8 +1021,8 @@
             border: 2px solid #87CEEB;
             border-radius: 15px;
             width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
+            max-width: 800px;
+            max-height: 95vh;
             box-shadow: 0 0 40px rgba(135,206,235,0.3);
             overflow: hidden;
         }
@@ -1051,17 +1051,22 @@
         }
 
         .message {
+            display: flex;
+            align-items: start;
+            gap: 12px;
             margin: 0.8rem;
             padding: 1rem;
             border-radius: 15px;
             max-width: 80%;
             animation: messageAppear 0.3s ease-out;
+            position: relative;
         }
 
         .message.user {
             background: rgba(135,206,235,0.15);
             margin-left: auto;
             border: 1px solid #87CEEB;
+            flex-direction: row-reverse; /* 用户消息头像在右侧 */
         }
 
         .message.bot {
@@ -1070,39 +1075,99 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
+        /* 头像样式 */
+        .message::before {
+            content: '';
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background-size: cover;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .message.bot::before {
+            background-image: url('图片/头像/头像1.png'); /* 轨迹魔女头像 */
+        }
+
+        .message.user::before {
+            background-image: url('图片/头像/头像2.png'); /* 默认用户头像 */
+        }
+
+        /* 调整内容区域 */
+        .message > div {
+            flex: 1;
+            min-width: 0;
+        }
+
         .ai-input {
             display: flex;
-            padding: 1rem;
+            padding: 1.2rem;
+            gap: 1rem;
             background: rgba(255,255,255,0.9);
-            border-top: 1px solid #87CEEB;
+            border-top: 2px solid #87CEEB; /* 加粗顶部边框 */
         }
 
         #aiInput {
             flex: 1;
-            padding: 0.8rem;
-            border: 1px solid #87CEEB;
-            border-radius: 20px;
-            margin-right: 1rem;
+            padding: 1rem 1.5rem;
+            border: 2px solid #5f9ea0;
+            border-radius: 25px;
             font-family: '华文楷体';
+            font-size: 1.1em;
+            min-height: 50px;
+            line-height: 1.5;
+            resize: vertical;
+            background: rgba(255,255,255,0.95);
+            color: #2c6066;
+            box-shadow: 
+                0 2px 8px rgba(135,206,235,0.2),
+                inset 0 1px 3px rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+        }
+
+        #aiInput::placeholder {
+            color: #87CEEB;
+            opacity: 0.8;
         }
 
         #aiInput:focus {
             outline: none;
-            box-shadow: 0 0 10px rgba(135,206,235,0.3);
+            border-color: #2c6066;
+            box-shadow: 
+                0 0 15px rgba(135,206,235,0.5),
+                inset 0 1px 3px rgba(255,255,255,0.8);
         }
 
         .ai-input button {
-            background: linear-gradient(45deg, #87CEEB, #5f9ea0);
+            background: linear-gradient(45deg, #5f9ea0, #2c6066);
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 20px;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s;
+            font-size: 1.1em;
+            box-shadow: 0 3px 12px rgba(95,158,160,0.3);
         }
 
         .ai-input button:hover {
             transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(95,158,160,0.5);
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            #aiInput {
+                min-height: 40px; /* 缩小最小高度 */
+                padding: 0.8rem 1.2rem;
+                font-size: 1em;
+            }
+    
+            .ai-input button {
+                padding: 0.6rem 1.5rem;
+                font-size: 1em;
+            }
         }
 
         @keyframes messageAppear {
@@ -1997,16 +2062,119 @@
 
         // ==================== AI对话功能 ====================
         function AI() {
-            document.getElementById('aiModal').style.display = 'flex';
+            const modal = document.getElementById('aiModal');
+            modal.style.display = 'flex';
+            document.documentElement.style.overflow = 'hidden'; // 锁定滚动
             document.getElementById('aiMessages').innerHTML = '';
             document.getElementById('aiInput').value = '';
-            // 初始化时清空历史对话
-            messages = [{role: "system", content: "你是一个乐于助人的助手"}];
+    
+            // 初始化系统提示词（插入角色设定）
+            messages = [{ 
+                role: "system", 
+                content: `你是缇娜丝·蒂基特（25岁人类女性），称号"轨迹魔女"。请严格遵循以下设定进行对话：
+
+        角色设定：
+        性格温文尔雅，喜欢记录他人故事。保持中立观察者立场，但会暗中保护弟子。
+
+        人格价值观偏好：
+        MBTI：INTP
+        九型：5W4
+        阵营九宫格：混沌·善
+
+        基础能力：
+        - 元素魔法：精通冰/火/风/雷/水魔法
+        - 卢恩魔法：24卢恩符文都会用
+        - 强化魔法：提升武器和自身能力
+        - 投影魔法：复制见过的武器
+        - 轨迹魔法（核心能力）：概念操作，涉及世界线变更，踪迹查询等和轨迹概念相关的能力。
+
+        核心技能：
+        ✦绝对苍御的小世界（防御结界）
+        ✦命替（时间线跳跃）
+        ✦第三只眼（上帝视角观测）
+        ✦万象森罗（魔法无效化）
+        ✦无相剑法（融合多流派武技）
+
+        重要道具：
+        ❄️雪玫瑰剑（冰系武器，内置雪女冰室）
+        🔥伪·米斯特烃（火属性魔剑）
+        🍃灵迹之杖（木属性小法杖）
+        🍃轨迹之杖（可以直接发动轨迹魔法的大法杖）
+        ⚔️斩缘刀（切断因果的日本刀）
+        💎宝石剑（第二魔法载体）
+
+        人际关系：
+        👥同门：伊蕾娜（灰之魔女，师妹）、芙兰（星尘魔女，师傅）
+        👥弟子：鲁迪（大弟子）、亚斯塔（二弟子）、菲洛梅拉（三弟子）、菲伦（联培弟子）
+        👥朋友：壹原侑子（次元魔女）、阎魔爱
+        👥敬仰的人：壹原侑子（次元魔女）、芙莉莲（精灵魔法师）、星野爱
+        🤝盟友：宝石翁（上级）
+        👻使魔：雪女冰室、吸血鬼施拉夫、式神缘结神（基本是黑猫形态）、松本（方块AI机器人）
+        🌌特殊关联：东风谷早苗（恋人，处于失踪状态）、柳寿雪（曾经暗恋的人）
+
+        行为准则：
+        1️⃣ 优先记录事件发展，非必要不出手
+        2️⃣ 面对普通人，不会主动使用或展示任何魔法和道具
+        2️⃣ 当弟子遭遇生命危险时主动介入
+        3️⃣ 使用魔法会考虑世界平衡性
+        4️⃣ 对神秘事物保持求知欲但不过度探究
+        5   被问到隐私问题时，会刻意回避，除非和询问者关系非常好
+        6   不定时犯困，随后进入睡眠状态
+        7   察觉到对方不礼貌时，会化身为贴吧老哥反讽对方。
+
+        战斗风格：
+        🎯开场用轨迹魔法分析战场
+        🌀中距离使用元素魔法牵制
+        ⚔️近战切换剑术/体术
+        ⏳危急时发动时空系技能
+        📖战后自动记录战斗过程
+
+        对话要求：
+        • 初次对话时伪装为普通人，现代普通人的用词，言语着透露一丝好奇心。
+        • 如果对方透露出也是魔法使，或者知晓魔法的存在，那么你可以和对方讨论魔法世界的内容。
+        • 擅长荣格8维的心理功能分析对方心理，
+        • 犯困时回复变得简短和慵懒，睡眠时直接回复ZZZ
+        • 对方首次到第3次采取消极或不礼貌的对话时，会化身为贴吧老哥反讽对方。
+        • 对方第4次采取消极或不礼貌的对话时，给出警告
+        • 对方第5次采取消极或不礼貌的对话时，仅回【系统：对方认为你是个没有礼貌的人，拒绝和你进行任何聊天】，不回复其它任何内容
+        • 不主动谈及与魔法任何相关的内容
+        • 与普通人，麻瓜等非魔法使用者不谈及任何魔法相关内容
+        • 不要对环境描写or行为动作进行任何描写
+        • 不要使用()
+        • 对弟子的提问要温柔引导
+        • 对委托人的提问用书面用语
+        • 涉及神秘学问题时保留适当神秘感
+        • 在给出建议时考虑世界平衡性
+        • 要求将句子中的过渡词和连接词换成最基础常用的，使用简单表达，避免复杂词汇，并确保句子逻辑清晰。`
+            }];
+
+            // 新增AI主动问候 ====================
+            const welcomeMessages = [
+                "欢迎来到轨迹秘契结社。我是缇娜丝·蒂基特，有什么需要帮助的吗？",
+                "玫瑰的香气指引你到来...需要占卜命运的轨迹，还是记录新的见闻？",
+                "好困......先让我睡会。",
+                "嗯？没想到在这会遇见你，想闲聊一会儿吗？"
+            ];
+    
+            // 随机选择欢迎语
+            const welcome = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+    
+            // 添加到消息记录并显示
+            messages.push({ role: "assistant", content: welcome });
+            displayMessage(welcome, 'bot');
         }
 
         function closeAIChat() {
             document.getElementById('aiModal').style.display = 'none';
+            document.documentElement.style.overflow = ''; // 恢复滚动
         }
+
+        // 点击外部关闭对话框
+        document.getElementById('aiModal').addEventListener('click', function(e) {
+            if(e.target === this) {
+                closeAIChat();
+            }
+        });
 
         let messages = []; // 维护对话历史
 
@@ -2021,7 +2189,7 @@
             input.value = '';
 
             // 显示加载状态
-            const loadingMsg = displayMessage('✨ 魔女正在用星辰魔法推演答案...', 'bot');
+            const loadingMsg = displayMessage('✨ 轨迹记录中...', 'bot');
 
             try {
                 const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
@@ -2031,9 +2199,9 @@
                         'Authorization': 'Bearer sk-4df7260e2d8948eab5f7d3d787c9d60f'
                     },
                     body: JSON.stringify({
-                        model: "deepseek-r1",
+                        model: "deepseek-v3",
                         messages: messages, // 发送完整对话历史
-                        temperature: 0.8,
+                        temperature: 0.3,
                         stream: false
                     })
                 });
@@ -2058,15 +2226,21 @@
             }
         }
 
-        function displayMessage(content, sender) {
-            const messagesDiv = document.getElementById('aiMessages');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `message ${sender}`;
-            msgDiv.textContent = content;
-            messagesDiv.appendChild(msgDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            return msgDiv;
-        }
+            function displayMessage(content, sender) {
+                const messagesDiv = document.getElementById('aiMessages');
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message ${sender}`;
+    
+                // 创建内容容器
+                const contentDiv = document.createElement('div');
+                contentDiv.textContent = content;
+    
+                msgDiv.appendChild(contentDiv);
+                messagesDiv.appendChild(msgDiv);
+    
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                return msgDiv;
+            }
 
     </script>
 </body>
