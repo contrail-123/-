@@ -381,57 +381,351 @@
             transform: rotate(90deg);
         }
 
-        /* 角色介绍 */
-        .character-card {
-            max-width: 800px;
+        /* ==================== 通用布局样式 ==================== */
+        .section-container {
+            max-width: 1200px;
             margin: 2rem auto;
             padding: 2rem;
             background: rgba(255,255,255,0.66);
             border: 2px solid var(--accent-color);
             border-radius: 15px;
             box-shadow: 0 0 30px rgba(135,206,235,0.1);
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(2px);
         }
 
-        .character-card::before {
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .section-title {
+            font-family: '华文楷体';
+            color: #5f9ea0;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .section-title::after {
             content: '';
             position: absolute;
-            width: 120%;
-            height: 120%;
-            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="none" stroke="%23b0e0e6" stroke-width="0.8" stroke-dasharray="5 3"/></svg>');
-            animation: rotate 80s linear infinite;
-            opacity: 0.3;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #87CEEB, transparent);
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+    
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        .image-container {
+            position: relative;
+            height: 400px;
+            perspective: 1200px;
+            opacity: 0.76;
+        }
+
+        .magic-frame {
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            top: 5%;
+            left: 5%;
+            border: 2px solid rgba(135,206,235,0.3);
+            border-radius: 15px;
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .image-content {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            overflow: hidden;
+            transform: translateZ(30px);
+            filter: saturate(1.2) contrast(1.1);
+        }
+
+        /* 动态光影层 */
+        .glow-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(135,206,235,0.2) 0%,
+                rgba(255,255,255,0.2) 50%,
+                rgba(135,206,235,0.2) 100%);
+            animation: lightFlow 8s infinite linear;
+        }
+
+        /* 悬浮动画 */
+        .magic-frame:hover {
+            transform: 
+                rotateX(-2.5deg) 
+                rotateY(-4deg)
+                translateY(-10px);
+            box-shadow: 
+                0 25px 50px rgba(135,135,155,1),
+                inset 0 0 30px rgba(255,255,255,1);
+        }
+
+        @keyframes lightFlow {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* 添加胶片颗粒效果 */
+        .image-content::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.1"/></svg>');
+            mix-blend-mode: overlay;
+        }
+
+        /* 角色介绍 */
+        /* ==================== 人物档案样式 ==================== */
+        .character-gallery {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: #87CEEB transparent;
+        }
+
+        .character-card {
+            flex: 0 0 calc(30% - 1rem);
+            width: 400px;
+            display: flex;
+            flex-direction: row;
+            background: rgba(255,255,255,0.66);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(135,206,235,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px) rotateZ(1deg);
+        }
+
+        .character-image {
+            width: 150px;
+            height: 300px;
+            flex-shrink: 0;
+            background: center/cover;
+            border-radius: 15px 0 0 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(135,206,235,0.1) 0%, 
+                rgba(255,255,255,0.2) 50%,
+                rgba(135,206,235,0.1) 100%);
+        }
+
+        .character-info {
+            padding: 1rem;
+            flex-grow: 1;
+            position: relative;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .character-card {
+                min-width: 320px;
+                flex-direction: column;
+            }
+    
+            .character-image {
+                width: 100%;
+                height: 200px;
+                border-radius: 15px 15px 0 0;
+            }
+        }
+
+        /* 能力图标动画 */
+        .ability-icon {
+            width: 80px;
+            height: 80px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
          /* ==================== 故事时间线区域 ==================== */
         .timeline {
             position: relative;
-            max-width: 1200px;  /* 限制最大宽度 */
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
-            backdrop-filter: blur(2px);  /* 背景模糊 */
+            padding: 2rem 0;
+            backdrop-filter: blur(2px);
+        }
+
+        /* 时间轴线 */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #87CEEB 0%, #5f9ea0 100%);
+            box-shadow: 0 0 15px rgba(135, 206, 235, 0.3);
+            z-index: 0;
         }
 
         .timeline-item {
-            padding: 1.5rem;
-            margin: 2rem 0;
-            background: rgba(255,255,255,0.66);
-            border-left: 5px solid var(--accent-color);
-            border-radius: 8px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            position: relative;
+            margin: 3rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            padding: 0;
+            z-index: 1;
         }
 
-        .magic-icon {
-            width: 50px;
-            height: 50px;
-            background: 
-                radial-gradient(circle at 30% 30%, #b0e0e6, #87CEEB),
-                url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 20l15 40H35z" fill="%23fff"/></svg>');
-            border: 2px solid var(--accent-color);
+        .timeline-item.enhanced {
+            padding-left: 0;
+            flex-direction: row;
+        }
+
+        .timeline-marker {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            background: #87CEEB;
             border-radius: 50%;
-            box-shadow: 0 0 15px rgba(135,206,235,0.3);
+            box-shadow: 0 0 15px rgba(135, 206, 235, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-year {
+            font-family: '华文楷体', cursive;
+            font-size: 1.2rem;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.66);
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(135, 206, 235, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: auto;
+            border-right: 5px solid var(--accent-color);
+        }
+
+        .timeline-item:hover .timeline-content {
+            transform: translateY(-5px);
+        }
+
+        .timeline-item:hover .timeline-marker {
+            transform: scale(1.1);
+        }
+
+        .timeline-content h3 {
+            font-family: '华文楷体', cursive;
+            color: #5f9ea0;
+            margin: 0 0 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .timeline-content p {
+            color: #5f9ea0;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0 0 1rem;
+        }
+
+        .timeline-image {
+            height: 200px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-image .glow-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(135, 206, 235, 0.2) 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(135, 206, 235, 0.2) 100%);
+            animation: lightFlow 8s infinite linear;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 30px;
+                transform: none;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+                align-items: flex-start;
+                margin: 2rem 0;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin: 0;
+                border-left: 5px solid var(--accent-color);
+                border-right: none;
+            }
+
+            .timeline-content {
+                max-width: none;
+            }
+
+            .timeline-marker {
+                margin-left: 10px;
+            }
         }
 
          /* ==================== 音乐播放器样式 ==================== */
@@ -836,7 +1130,7 @@
             backface-visibility: hidden; /* 防止翻转时穿透 */
             clip-path: polygon(0 0, 100% 0, 98% 100%, 2% 100%); /* 梯形裁剪模拟透视 */
             clip-path: none; /* 移除裁剪路径 */
-            height: 280px; /* 添加固定高度 */
+            height: 360px; /* 添加固定高度 */
             border-radius: 5px 5px 0 0; /* 添加圆角 */
             transition: transform 0.3s;
             mix-blend-mode: multiply; /* 关键属性[6,8](@ref) */
@@ -855,7 +1149,7 @@
         }
 
         .pdf-info {
-            padding: 1rem;
+            padding: 0.1rem;
             text-align: center;
         }
 
@@ -1173,6 +1467,254 @@
         @keyframes messageAppear {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+
+        /* 魔法小球样式 */
+        .ai-magic-ball {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at 30% 30%, #87CEEB, #5f9ea0);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(135,206,235,0.5);
+            cursor: pointer;
+            z-index: 9999;
+            transition: transform 0.3s;
+        }
+
+        .ai-magic-ball:hover {
+            transform: scale(1.2);
+            filter: brightness(1.1);
+        }
+
+        /* ==================== 天气系统样式 ==================== */
+        .weather-section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .weather-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30,30 Q50,10 70,30 T90,50 Q70,70 50,90 Q30,70 10,50 Q30,30 50,10" fill="none" stroke="%2387CEEB" stroke-width="0.3"/></svg>');
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .weather-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .weather-search {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .weather-search input {
+            flex: 1;
+            max-width: 400px;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 30px;
+            font-family: '华文楷体', cursive;
+            font-size: 1.1rem;
+            color: #5f9ea0;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(135, 206, 235, 0.1);
+        }
+
+        .weather-search input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(135, 206, 235, 0.3);
+            border-color: #5f9ea0;
+        }
+
+        .weather-search button {
+            padding: 0.8rem 2rem;
+            background: linear-gradient(45deg, #87CEEB, #5f9ea0);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: '华文楷体', cursive;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 12px rgba(95, 158, 160, 0.3);
+        }
+
+        .weather-search button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(95, 158, 160, 0.5);
+        }
+
+        .weather-display {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .weather-info {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .weather-placeholder {
+            text-align: center;
+            color: #5f9ea0;
+            font-family: '华文楷体', cursive;
+        }
+
+        .weather-placeholder img {
+            width: 120px;
+            height: 120px;
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+
+        .weather-cards {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) transparent;
+        }
+
+        .weather-day {
+            min-width: 180px;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.85) !important;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(135, 206, 235, 0.2);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .weather-day::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(135, 206, 235, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+            z-index: 0;
+        }
+
+        .weather-day:hover {
+            transform: translateY(-5px) rotateZ(1deg);
+            box-shadow: 0 8px 25px rgba(135, 206, 235, 0.4);
+        }
+
+        .weekday {
+            font-family: '华文楷体', cursive;
+            color: #5f9ea0;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .weather-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1rem;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .temp-day {
+            font-family: '华文楷体', cursive;
+            font-size: 2rem;
+            color: var(--accent-color);
+            text-align: center;
+            margin: 0.5rem 0;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .weather-details {
+            font-family: '华文楷体', cursive;
+            color: #5f9ea0;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .weather-details div {
+            margin: 0.5rem 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .weather-description {
+            font-family: '华文楷体', cursive;
+            color: #5f9ea0;
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 1rem;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 滚动条样式 */
+        .weather-cards::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .weather-cards::-webkit-scrollbar-track {
+            background: rgba(135, 206, 235, 0.1);
+            border-radius: 3px;
+        }
+
+        .weather-cards::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        /* 错误提示 */
+        .weather-error {
+            font-family: '华文楷体', cursive;
+            color: #e74c3c;
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .weather-search {
+                flex-direction: column;
+            }
+
+            .weather-search input,
+            .weather-search button {
+                width: 100%;
+            }
+
+            .weather-day {
+                min-width: 160px;
+            }
         }
 
     </style>
@@ -1222,52 +1764,266 @@
     </div>
 
     <nav class="nav">
-        <a href="#profile">结社介绍</a>
+        <a href="#weather">今日天气</a>
+        <a href="#intro">结社介绍</a>
+        <a href="#timeline">发展轨迹</a>
         <a href="#profile">人物档案</a>
-        <a href="#profile">能力介绍</a>
-        <a href="#timeline">轨迹见闻</a>
+        <a href="#abilities">能力介绍</a>
         <a href="#artifacts">秘宝图鉴</a>
         <a href="./pdf/轨迹魔女见闻录.pdf" target="_blank" id="pdf-reader">📜 魔女手札</a>
         <a href="javascript:void(0)" onclick="loadLibrary()">大图书馆</a>
-        <a href="#artifacts">休闲游戏</a>
-        <a href="#artifacts">联系方式</a>
+        <a href="#game">休闲游戏</a>
+        <a href="#link">联系方式</a>
     </nav>
 
-    <div class="character-card" id="profile">
-        <h2>🕯️ 缇娜丝·蒂基特</h2>
-        <div class="attributes">
-            <h3>⚖️ 属性面板</h3>
-            <ul>
-                <li>魔力：SSS+ 10370</li>
-                <li>敏捷：SSS+ 8137</li>
-                <li>称号：轨迹魔女/乌妃代理人/缘柱</li>
-                <li>使魔：雪女冰室、吸血鬼施拉夫</li>
-            </ul>
+    <!-- 今日天气 -->
+    <section id="weather" class="section-container">
+        <h2 class="section-title">☀️ 今日天气</h2>
+        <div class="weather-container">
+            <h1>城市天气查询系统 </h1>
+            <div class="input-group">
+                <input type="text" id="cityInput" placeholder="请输入中文城市名称（如：北京）">
+                <button onclick="getWeather()">查询天气</button>
+            </div>
+            <div id="weatherInfo" class="weather-card"></div>
         </div>
-    </div>
+    </section>
 
-    <div class="timeline" id="timeline">
-        <h2>⏳ 次元轨迹</h2>
-        <div class="timeline-item">
-            <h3>📖 魔女之旅篇</h3>
-            <p>初踏魔法大陆，建立轨迹魔法理论体系...</p>
-        </div>
-        <div class="timeline-item">
-            <h3>⚔️ 黑色四叶草篇</h3>
-            <p>收徒亚斯塔，参与三叶草王国精灵战争...</p>
-        </div>
-    </div>
-
-    <div class="character-card" id="abilities">
-        <h2>✨ 魔导奥义</h2>
-        <div class="magic-grid">
-            <div class="magic-item">
-                <div class="magic-icon"></div>
-                <h4>绝对苍御的小世界</h4>
-                <p>对界防御魔法，折叠平行时空屏障</p>
+    <!-- 结社介绍 -->
+    <section id="intro" class="section-container">
+        <h2 class="section-title">🌌 结社介绍</h2>
+        <div class="grid-layout">
+            <div class="text-content">
+                <h3>轨迹秘契结社</h3>
+                <p>​​轨迹秘契结社（The Society of Arcane Trajectories）成立于2024年，是一个以多元化的理性视角，探索未知领域，记录社群变化，明晰矛盾本质的虚拟交流社群。</p>
+            
+                <div class="magic-list">
+                    <div class="magic-item">
+                        <div class="magic-icon"></div>
+                        <h4>核心宗旨</h4>
+                        <p>「观测不干涉，记录不篡改」——宿命难逆，我们只是见证者与记录者。</p>
+                    </div>
+                
+                    <div class="magic-item">
+                        <div class="magic-icon"></div>
+                        <h4>成员构成</h4>
+                        <ul>
+                            <li>📜 社长（1名）</li>
+                            <li>⚖️ 副社长（1名）</li>
+                            <li>🔮 占卜师（2名）</li>
+                            <li>🖋️ 记录员（7名）</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- 图片占位 -->
+            <div class="image-container">
+                <div class="magic-frame">
+                    <div class="image-content" 
+                         style="background-image: url('图片/主界面/1.png')">
+                        <div class="glow-layer"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- 发展轨迹 -->
+    <section id="timeline" class="section-container">
+        <h2 class="section-title">⌛ 轨迹见闻</h2>
+        <div class="timeline">
+            <!-- 时间轴线 -->
+            <div class="timeline-line"></div>
+        
+            <!-- 时间轴条目 -->
+            <div class="timeline-item enhanced">
+                <div class="timeline-marker">
+                    <span class="timeline-year">2021</span>
+                </div>
+                <div class="timeline-content">
+                    <h3>🌌 虚拟之行</h3>
+                    <p>开始接触虚拟世界（VRC），缇娜丝·蒂基特的角色形象在此萌芽。</p>
+                    <div class="timeline-image" style="background-image: url('图片/主界面/7.png')">
+                        <div class="glow-layer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item enhanced">
+                <div class="timeline-marker">
+                    <span class="timeline-year">2022</span>
+                </div>
+                <div class="timeline-content">
+                    <h3>✨ 神秘之行</h3>
+                    <p>神秘学的启蒙之年，缇娜丝开启了对世界认知的新大门。</p>
+                    <div class="timeline-image" style="background-image: url('图片/主界面/8.png')">
+                        <div class="glow-layer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item enhanced">
+                <div class="timeline-marker">
+                    <span class="timeline-year">2023</span>
+                </div>
+                <div class="timeline-content">
+                    <h3>🌀 观察之行</h3>
+                    <p>从集体无意识、符号秩序到虚拟民族志，轨迹在观测下悄然显现</p>
+                    <div class="timeline-image" style="background-image: url('图片/主界面/9.png')">
+                        <div class="glow-layer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item enhanced">
+                <div class="timeline-marker">
+                    <span class="timeline-year">2024</span>
+                </div>
+                <div class="timeline-content">
+                    <h3>🔮 结社成立</h3>
+                    <p>轨迹秘契结社正式成立，开始系统记录元宇宙的轨迹变化。</p>
+                    <div class="timeline-image" style="background-image: url('图片/主界面/1.png')">
+                        <div class="glow-layer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- 人物档案 -->
+    <section id="profile" class="section-container">
+        <h2 class="section-title">📖 人物档案</h2>
+        <div class="character-gallery">
+            <!-- 人物卡片 -->
+            <div class="character-card">
+                <div class="character-image" style="background-image: url('图片/主界面/3.jpg')"></div>
+                <div class="character-info">
+                    <h3>缇娜丝·蒂基特</h3>
+                    <p>性别：女</p>
+                    <p>年龄：未知</p>
+                    <p>种族：人类</p>
+                    <p>称号：轨迹魔女</p>
+                    <p>阵营：中立·善良</p>
+                    <button class="detail-btn">查看完整档案</button>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <div class="character-image" style="background-image: url('图片/主界面/4.png')"></div>
+                <div class="character-info">
+                    <h3>冰室</h3>
+                    <p>性别：女</p>
+                    <p>年龄：未知</p>
+                    <p>种族：雪女</p>
+                    <p>称号：无</p>
+                    <p>阵营：绝对·中立</p>
+                    <button class="detail-btn">查看完整档案</button>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <div class="character-image" style="background-image: url('图片/主界面/5.png')"></div>
+                <div class="character-info">
+                    <h3>小施</h3>
+                    <p>性别：女</p>
+                    <p>年龄：未知</p>
+                    <p>种族：真祖</p>
+                    <p>称号：无</p>
+                    <p>阵营：绝对·中立</p>
+                    <button class="detail-btn">查看完整档案</button>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <div class="character-image" style="background-image: url('图片/主界面/6.png')"></div>
+                <div class="character-info">
+                    <h3>小缘</h3>
+                    <p>性别：女</p>
+                    <p>年龄：未知</p>
+                    <p>种族：神明</p>
+                    <p>称号：无</p>
+                    <p>阵营：中立·善良</p>
+                    <button class="detail-btn">查看完整档案</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 能力体系 -->
+    <section id="abilities" class="section-container">
+        <h2 class="section-title">✨ 能力介绍</h2>
+        <div class="ability-grid">
+            <div class="ability-card">
+                <div class="ability-icon cosmic"></div>
+                <h4>卢恩魔法</h4>
+                <p>源于早期日耳曼语族的符文系统，语言符号与能量载体的双重属性</p>
+            </div>
+        
+            <div class="ability-card">
+                <div class="ability-icon time"></div>
+                <h4>德鲁伊魔法</h4>
+                <p>源于古代凯尔特社会的祭司实践，强调人与生态系统的共生关系</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 秘宝图鉴 -->
+    <section id="artifacts" class="section-container">
+        <h2 class="section-title">🔮 秘宝图鉴</h2>
+        <div class="artifact-grid">
+            <div class="artifact-card">
+                <div class="artifact-image"
+                     style="background-image: url('图片/主界面/2.png')"></div>
+                <h4>星穹轨迹仪</h4>
+                <p>可定位多元宇宙任意坐标的导航装置</p>
+            </div>
+            <!-- 更多秘宝卡片... -->
+        </div>
+    </section>
+
+    <!-- 休闲游戏 -->
+    <section id="game" class="section-container">
+        <h2 class="section-title">🎲 休闲游戏</h2>
+        <div class="artifact-grid">
+            <div class="artifact-card">
+                <div class="artifact-image"
+                     style="background-image: url('图片/星轨仪.png')"></div>
+                <h4>五子棋</h4>
+                <p>和电脑进行快乐的五子棋对决吧</p>
+            </div>
+            <div class="artifact-card">
+                <div class="artifact-image"
+                     style="background-image: url('图片/星轨仪.png')"></div>
+                <h4>猜拳</h4>
+                <p>石头克剪刀，剪刀克布，布克石头</p>
+            </div>
+            <!-- 更多秘宝卡片... -->
+        </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section id="link" class="section-container">
+        <h2 class="section-title">📞 联系方式</h2>
+        <div class="artifact-grid">
+            <div class="artifact-card">
+                <div class="artifact-image"
+                     style="background-image: url('图片/星轨仪.png')"></div>
+                <h4>bilibili</h4>
+                <p>御坂13381号</p>
+            </div>
+            <div class="artifact-card">
+                <div class="artifact-image"
+                     style="background-image: url('图片/星轨仪.png')"></div>
+                <h4>QQ</h4>
+                <p>1102954480</p>
+            </div>
+            <!-- 更多秘宝卡片... -->
+        </div>
+    </section>
 
     <!-- ==================== 音乐播放器 ==================== -->
     <div class="music-control collapsed">
@@ -1389,6 +2145,8 @@
             </div>
         </div>
     </div>
+
+    <div class="ai-magic-ball" id="magicBall"></div>
 
     <script>
         // ==================== 加载动画控制 ====================
@@ -1684,6 +2442,7 @@
             const viewer = document.getElementById('pdf-viewer');
             viewer.style.display = 'none';
             viewer.querySelector('iframe').src = '';
+            document.documentElement.style.overflow = '';
         }
 
         // 为PDF按钮添加点击事件
@@ -1973,6 +2732,7 @@
 
         // 显示PDF查看器
         function showPDF(url) {
+            document.documentElement.style.overflow = 'hidden';
             const viewer = document.getElementById('pdf-viewer');
             viewer.style.display = 'block';
             viewer.querySelector('iframe').src = url;
@@ -1980,6 +2740,7 @@
 
         // 大图书馆数据
         const libraryCollection = [
+            // 原有4本
             {
                 title: "内在的天空",
                 pdf: "pdf/内在的天空.pdf",
@@ -1999,11 +2760,19 @@
                 title: "所罗门的钥匙",
                 pdf: "pdf/所罗门的钥匙.pdf",
                 thumb: "书籍封面/所罗门的钥匙.png"
-            }
+            },
+            
+            // 新增36本轨迹魔女见闻录
+            ...Array.from({length:36}, (_,i) => ({
+                title: `轨迹魔女见闻录 第${i+1}卷`,
+                pdf: "pdf/待补充.pdf", // 暂时使用占位路径
+                thumb: `小说封面/轨迹魔女见闻录-${i+1}.jpg`
+            }))
         ];
 
         // 打开大图书馆
         function loadLibrary() {
+            document.documentElement.style.overflow = 'hidden';// 网页滑动限制
             const modal = document.getElementById('libraryModal');
             const grid = modal.querySelector('.library-grid-modal');
     
@@ -2037,6 +2806,7 @@
         // 关闭大图书馆
         function closeLibrary() {
             document.getElementById('libraryModal').style.display = 'none';
+            document.documentElement.style.overflow = '';// 网页滑动恢复
         }
 
         // 点击外部关闭
@@ -2240,6 +3010,110 @@
     
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
                 return msgDiv;
+            }
+
+            // ==================== 天气系统 ====================
+            const API_KEY = 'f446a6a2d99035e8bca93799cddc4704';
+
+            async function getWeather() {
+                const city = document.getElementById('cityInput').value.trim();
+                const weatherInfo = document.getElementById('weatherInfo');
+
+                if (!city) {
+                    showError('请输入有效的城市名称');
+                    return;
+                }
+
+                try {
+                    // 获取城市坐标
+                    const geoResponse = await fetch(
+                        `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
+                    );
+                
+                    if (!geoResponse.ok) throw new Error('城市信息获取失败');
+                
+                    const geoData = await geoResponse.json();
+                    if (geoData.length === 0) throw new Error('城市未找到');
+
+                    // 使用免费版5天预报API
+                    const { lat, lon } = geoData[0];
+                    const weatherResponse = await fetch(
+                        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}&lang=zh_cn`
+                    );
+
+                    if (!weatherResponse.ok) throw new Error('天气数据获取失败');
+                
+                    const weatherData = await weatherResponse.json();
+                    displayWeather(weatherData, city);
+                
+                } catch (error) {
+                    showError(error.message.includes('Failed to fetch') ? '网络连接异常' : error.message);
+                }
+            }
+
+            function displayWeather(data, cityName) {
+                const weatherInfo = document.getElementById('weatherInfo');
+            
+                // 按天分组预报数据（每3小时一个数据点）
+                const dailyForecast = {};
+                data.list.forEach(item => {
+                    const date = new Date(item.dt * 1000).toLocaleDateString();
+                    if (!dailyForecast[date]) {
+                        dailyForecast[date] = {
+                            temps: [],
+                            feelsLike: [],
+                            humidity: [],
+                            windSpeed: [],
+                            icons: [],
+                            descriptions: []
+                        };
+                    }
+                    dailyForecast[date].temps.push(item.main.temp);
+                    dailyForecast[date].feelsLike.push(item.main.feels_like);
+                    dailyForecast[date].humidity.push(item.main.humidity);
+                    dailyForecast[date].windSpeed.push(item.wind.speed);
+                    dailyForecast[date].icons.push(item.weather[0].icon);
+                    dailyForecast[date].descriptions.push(item.weather[0].description);
+                });
+
+                // 生成预报卡片
+                const forecastHTML = Object.keys(dailyForecast).slice(0, 5).map(date => {
+                    const dayData = dailyForecast[date];
+                    const avgTemp = Math.round(dayData.temps.reduce((a, b) => a + b, 0) / dayData.temps.length);
+                    const avgFeelsLike = Math.round(dayData.feelsLike.reduce((a, b) => a + b, 0) / dayData.feelsLike.length);
+                    const avgHumidity = Math.round(dayData.humidity.reduce((a, b) => a + b, 0) / dayData.humidity.length);
+                    const avgWind = (dayData.windSpeed.reduce((a, b) => a + b, 0) / dayData.windSpeed.length).toFixed(1);
+                    const mainIcon = dayData.icons[Math.floor(dayData.icons.length / 2)];
+                    const weekday = new Date(date).toLocaleDateString('zh-CN', { weekday: 'long' });
+
+                    return `
+                        <div class="weather-day">
+                            <div class="weekday">${weekday}</div>
+                            <img class="weather-icon" src="https://openweathermap.org/img/wn/${mainIcon}@2x.png">
+                            <div class="temp-day">${avgTemp}°C</div>
+                            <div class="details">
+                                <div>体感: ${avgFeelsLike}°C</div>
+                                <div>湿度: ${avgHumidity}%</div>
+                                <div>风速: ${avgWind} m/s</div>
+                            </div>
+                            <div class="description">${dayData.descriptions[0]}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                weatherInfo.innerHTML = `
+                    <h2>${cityName} 5天天气预报</h2>
+                    <div class="weather-cards">
+                        ${forecastHTML}
+                    </div>
+                `;
+                weatherInfo.classList.add('visible');
+            }
+
+            function showError(message) {
+                const weatherInfo = document.getElementById('weatherInfo');
+                weatherInfo.innerHTML = `<p style="color: #e74c3c">⚠️ ${message}</p>`;
+                weatherInfo.classList.add('visible');
             }
 
     </script>
