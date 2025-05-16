@@ -579,7 +579,7 @@
             50% { transform: translateY(-10px); }
         }
 
-         /* ==================== 故事时间线区域 ==================== */
+        /* ==================== 故事时间线区域 ==================== */
         .timeline {
             position: relative;
             max-width: 1200px;
@@ -1467,6 +1467,7 @@
         @keyframes messageAppear {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
 
         /* 魔法小球样式 */
         .ai-magic-ball {
@@ -1575,6 +1576,7 @@
         }
 
         .weather-placeholder img {
+            background: url('./图片/插画/图片1.png') center/cover;
             width: 120px;
             height: 120px;
             opacity: 0.7;
@@ -1717,6 +1719,147 @@
             }
         }
 
+        /* ==================== 天气系统样式 ==================== */
+        .astrolabe-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .astrolabe-modal .modal-content {
+            background: rgba(255,255,255,0.95);
+            border: 3px solid #87CEEB;
+            border-radius: 15px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 0 50px rgba(135,206,235,0.3);
+            position: relative;
+        }
+
+        /* 星盘容器样式 */
+        .astrolabe-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(106, 90, 205, 0.3);
+            color: #fff;
+        }
+
+        /* 输入区样式 */
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .astrolabe-container label {
+            display: block;
+            margin-bottom: 8px;
+            color: #9370db;
+            font-weight: 600;
+        }
+
+        .astrolabe-container input, 
+        .astrolabe-container select {
+            width: 100% !important;  /* 覆盖全局样式 */
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #4b0082;
+            border-radius: 8px;
+            color: #e6e6fa;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .astrolabe-container input:focus, 
+        .astrolabe-container select:focus {
+            border-color: #9400d3;
+            box-shadow: 0 0 15px rgba(147, 112, 219, 0.5);
+            outline: none;
+        }
+
+        /* 占星按钮样式 */
+        #submitBtn {
+            background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%);
+            border: none;
+            padding: 15px 40px;
+            color: white;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #submitBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
+        }
+
+        /* 可视化结果区域 */
+        .astrology-card {
+            background: linear-gradient(145deg, #2c1810 0%, #483024 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .planet-aspect {
+            color: #DEB887;
+            margin: 15px 0;
+            border-left: 3px solid #CD7F32;
+            padding-left: 15px;
+        }
+
+        .house-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .zodiac-sign {
+            color: #C0C0C0;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+
+        .aspect-detail {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .astro-title {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .astro-title::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: #9370db;
+            margin: 10px auto;
+        }
+
     </style>
 </head>
 <body>
@@ -1733,6 +1876,7 @@
             <button class="function-btn" onclick="loadLibrary()">📚 大图书馆</button>
             <button class="function-btn" onclick="showPDF('./pdf/轨迹魔女见闻录.pdf')">📜 魔女手札</button>
             <button class="function-btn" onclick="AI()">🤖 AI智能体</button>
+            <button class="function-btn" onclick="astrolabe()">✨ 星盘解读</button>
         </div>
     </div>
 
@@ -2145,9 +2289,54 @@
             </div>
         </div>
     </div>
-
     <div class="ai-magic-ball" id="magicBall"></div>
 
+    <!-- ==================== 星盘系统 ==================== -->
+    <div class="astrolabe-modal" id="astrolabeModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeAstrolabe()">✖️</button>
+            <div class="astrolabe-container">
+                <h1 style="text-align: center;margin-bottom: 30px;">✨ 本命星盘解析系统 ✨</h1>
+            
+                <div class="input-group">
+                    <label for="birthday">出生时间</label>
+                    <input type="datetime-local" id="birthday" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="longitude">出生地经度</label>
+                    <input type="number" id="longitude" step="0.0001" value="121.47" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="latitude">出生地纬度</label>
+                    <input type="number" id="latitude" step="0.0001" value="31.23" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="tz">时区</label>
+                    <input type="number" id="tz" value="8" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="h_sys">宫位系统</label>
+                    <select id="h_sys">
+                        <option value="k">Koch</option>
+                        <option value="p">Placidus</option>
+                        <option value="r">Regiomontanus</option>
+                    </select>
+                </div>
+
+                <button id="submitBtn">生成星盘</button>
+
+                <div id="result">
+                    <div class="loading" style="display: none;">🪐 星体运行计算中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://images.robustcn.com/public/static/module/common/jquery/jquery-2.2.3.min.js"></script>
     <script>
         // ==================== 加载动画控制 ====================
         // 提前初始化音频元素
@@ -2996,125 +3185,256 @@
             }
         }
 
-            function displayMessage(content, sender) {
-                const messagesDiv = document.getElementById('aiMessages');
-                const msgDiv = document.createElement('div');
-                msgDiv.className = `message ${sender}`;
+        function displayMessage(content, sender) {
+            const messagesDiv = document.getElementById('aiMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${sender}`;
     
-                // 创建内容容器
-                const contentDiv = document.createElement('div');
-                contentDiv.textContent = content;
+            // 创建内容容器
+            const contentDiv = document.createElement('div');
+            contentDiv.textContent = content;
     
-                msgDiv.appendChild(contentDiv);
-                messagesDiv.appendChild(msgDiv);
+            msgDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(msgDiv);
     
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                return msgDiv;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            return msgDiv;
+        }
+
+        // ==================== 天气系统 ====================
+        const API_KEY = 'f446a6a2d99035e8bca93799cddc4704';
+
+        async function getWeather() {
+            const city = document.getElementById('cityInput').value.trim();
+            const weatherInfo = document.getElementById('weatherInfo');
+
+            if (!city) {
+                showError('请输入有效的城市名称');
+                return;
             }
 
-            // ==================== 天气系统 ====================
-            const API_KEY = 'f446a6a2d99035e8bca93799cddc4704';
-
-            async function getWeather() {
-                const city = document.getElementById('cityInput').value.trim();
-                const weatherInfo = document.getElementById('weatherInfo');
-
-                if (!city) {
-                    showError('请输入有效的城市名称');
-                    return;
-                }
-
-                try {
-                    // 获取城市坐标
-                    const geoResponse = await fetch(
-                        `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
-                    );
+            try {
+                // 获取城市坐标
+                const geoResponse = await fetch(
+                    `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
+                );
                 
-                    if (!geoResponse.ok) throw new Error('城市信息获取失败');
+                if (!geoResponse.ok) throw new Error('城市信息获取失败');
                 
-                    const geoData = await geoResponse.json();
-                    if (geoData.length === 0) throw new Error('城市未找到');
+                const geoData = await geoResponse.json();
+                if (geoData.length === 0) throw new Error('城市未找到');
 
-                    // 使用免费版5天预报API
-                    const { lat, lon } = geoData[0];
-                    const weatherResponse = await fetch(
-                        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}&lang=zh_cn`
-                    );
+                // 使用免费版5天预报API
+                const { lat, lon } = geoData[0];
+                const weatherResponse = await fetch(
+                    `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}&lang=zh_cn`
+                );
 
-                    if (!weatherResponse.ok) throw new Error('天气数据获取失败');
+                if (!weatherResponse.ok) throw new Error('天气数据获取失败');
                 
-                    const weatherData = await weatherResponse.json();
-                    displayWeather(weatherData, city);
+                const weatherData = await weatherResponse.json();
+                displayWeather(weatherData, city);
                 
-                } catch (error) {
-                    showError(error.message.includes('Failed to fetch') ? '网络连接异常' : error.message);
-                }
+            } catch (error) {
+                showError(error.message.includes('Failed to fetch') ? '网络连接异常' : error.message);
             }
+        }
 
-            function displayWeather(data, cityName) {
-                const weatherInfo = document.getElementById('weatherInfo');
+        function displayWeather(data, cityName) {
+            const weatherInfo = document.getElementById('weatherInfo');
             
-                // 按天分组预报数据（每3小时一个数据点）
-                const dailyForecast = {};
-                data.list.forEach(item => {
-                    const date = new Date(item.dt * 1000).toLocaleDateString();
-                    if (!dailyForecast[date]) {
-                        dailyForecast[date] = {
-                            temps: [],
-                            feelsLike: [],
-                            humidity: [],
-                            windSpeed: [],
-                            icons: [],
-                            descriptions: []
-                        };
-                    }
-                    dailyForecast[date].temps.push(item.main.temp);
-                    dailyForecast[date].feelsLike.push(item.main.feels_like);
-                    dailyForecast[date].humidity.push(item.main.humidity);
-                    dailyForecast[date].windSpeed.push(item.wind.speed);
-                    dailyForecast[date].icons.push(item.weather[0].icon);
-                    dailyForecast[date].descriptions.push(item.weather[0].description);
-                });
+            // 按天分组预报数据（每3小时一个数据点）
+            const dailyForecast = {};
+            data.list.forEach(item => {
+                const date = new Date(item.dt * 1000).toLocaleDateString();
+                if (!dailyForecast[date]) {
+                    dailyForecast[date] = {
+                        temps: [],
+                        feelsLike: [],
+                        humidity: [],
+                        windSpeed: [],
+                        icons: [],
+                        descriptions: []
+                    };
+                }
+                dailyForecast[date].temps.push(item.main.temp);
+                dailyForecast[date].feelsLike.push(item.main.feels_like);
+                dailyForecast[date].humidity.push(item.main.humidity);
+                dailyForecast[date].windSpeed.push(item.wind.speed);
+                dailyForecast[date].icons.push(item.weather[0].icon);
+                dailyForecast[date].descriptions.push(item.weather[0].description);
+            });
 
-                // 生成预报卡片
-                const forecastHTML = Object.keys(dailyForecast).slice(0, 5).map(date => {
-                    const dayData = dailyForecast[date];
-                    const avgTemp = Math.round(dayData.temps.reduce((a, b) => a + b, 0) / dayData.temps.length);
-                    const avgFeelsLike = Math.round(dayData.feelsLike.reduce((a, b) => a + b, 0) / dayData.feelsLike.length);
-                    const avgHumidity = Math.round(dayData.humidity.reduce((a, b) => a + b, 0) / dayData.humidity.length);
-                    const avgWind = (dayData.windSpeed.reduce((a, b) => a + b, 0) / dayData.windSpeed.length).toFixed(1);
-                    const mainIcon = dayData.icons[Math.floor(dayData.icons.length / 2)];
-                    const weekday = new Date(date).toLocaleDateString('zh-CN', { weekday: 'long' });
+            // 生成预报卡片
+            const forecastHTML = Object.keys(dailyForecast).slice(0, 5).map(date => {
+                const dayData = dailyForecast[date];
+                const avgTemp = Math.round(dayData.temps.reduce((a, b) => a + b, 0) / dayData.temps.length);
+                const avgFeelsLike = Math.round(dayData.feelsLike.reduce((a, b) => a + b, 0) / dayData.feelsLike.length);
+                const avgHumidity = Math.round(dayData.humidity.reduce((a, b) => a + b, 0) / dayData.humidity.length);
+                const avgWind = (dayData.windSpeed.reduce((a, b) => a + b, 0) / dayData.windSpeed.length).toFixed(1);
+                const mainIcon = dayData.icons[Math.floor(dayData.icons.length / 2)];
+                const weekday = new Date(date).toLocaleDateString('zh-CN', { weekday: 'long' });
 
-                    return `
-                        <div class="weather-day">
-                            <div class="weekday">${weekday}</div>
-                            <img class="weather-icon" src="https://openweathermap.org/img/wn/${mainIcon}@2x.png">
-                            <div class="temp-day">${avgTemp}°C</div>
-                            <div class="details">
-                                <div>体感: ${avgFeelsLike}°C</div>
-                                <div>湿度: ${avgHumidity}%</div>
-                                <div>风速: ${avgWind} m/s</div>
-                            </div>
-                            <div class="description">${dayData.descriptions[0]}</div>
+                return `
+                    <div class="weather-day">
+                        <div class="weekday">${weekday}</div>
+                        <img class="weather-icon" src="https://openweathermap.org/img/wn/${mainIcon}@2x.png">
+                        <div class="temp-day">${avgTemp}°C</div>
+                        <div class="details">
+                            <div>体感: ${avgFeelsLike}°C</div>
+                            <div>湿度: ${avgHumidity}%</div>
+                            <div>风速: ${avgWind} m/s</div>
                         </div>
-                    `;
-                }).join('');
-
-                weatherInfo.innerHTML = `
-                    <h2>${cityName} 5天天气预报</h2>
-                    <div class="weather-cards">
-                        ${forecastHTML}
+                        <div class="description">${dayData.descriptions[0]}</div>
                     </div>
                 `;
-                weatherInfo.classList.add('visible');
+            }).join('');
+
+            weatherInfo.innerHTML = `
+                <h2>${cityName} 5天天气预报</h2>
+                <div class="weather-cards">
+                    ${forecastHTML}
+                </div>
+            `;
+            weatherInfo.classList.add('visible');
+        }
+
+        // ==================== 星盘系统 ====================
+        function astrolabe() {
+            document.documentElement.style.overflow = 'hidden';
+            document.getElementById('astrolabeModal').style.display = 'flex';
+    
+            // 初始化星盘系统
+            initAstrolabe();
+        }
+
+        function closeAstrolabe() {
+            document.getElementById('astrolabeModal').style.display = 'none';
+            document.documentElement.style.overflow = '';
+        }
+
+        function initAstrolabe() {
+            // 星盘可视化生成器
+            const AstroVisualizer = {
+                formatDatetime: (datetimeStr) => {
+                    const dt = new Date(datetimeStr);
+                    return `${dt.getFullYear()}年${dt.getMonth()+1}月${dt.getDate()}日 ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}`;
+                },
+
+                formatDegree: (degObj) => {
+                    if(!degObj) return '';
+                    return `${degObj.deg}°${degObj.min}′${degObj.sec}″`;
+                },
+
+                generateHouses: (housesData) => {
+                    return housesData.slice(0, 12).map(h => ({
+                        name: h.house_life,
+                        sign: h.sign.sign_chinese,
+                        mainStar: h.main_planet[0]?.planet_chinese || '',
+                        degree: AstroVisualizer.formatDegree(h.sign)
+                    }));
+                },
+
+                createPlanetIndex: (planetsData) => {
+                    const index = {};
+                    planetsData.forEach(p => {
+                        index[p.code_name] = {
+                            name: p.planet_chinese,
+                            sign: p.sign.sign_chinese,
+                            degree: AstroVisualizer.formatDegree(p.sign),
+                            house: p.house_id
+                        }
+                    });
+                    return index;
+                },
+
+                generateHTML: (responseData) => {
+                    const data = responseData.data;
+                    const houses = AstroVisualizer.generateHouses(data.house);
+                    const planets = AstroVisualizer.createPlanetIndex(data.planet);
+
+                    return `
+                    <div class="astrology-card">
+                        <div class="astro-title">
+                            <h2>♈️ 命盘解析</h2>
+                            <p>${AstroVisualizer.formatDatetime(data.user.birthday)}</p>
+                            <p>坐标：东经${data.user.longitude}° 北纬${data.user.latitude}°</p>
+                        </div>
+
+                        <div class="planet-aspect">
+                            <h3>🌟 核心配置</h3>
+                            <div class="aspect-detail">
+                                <p>太阳：${planets['0'].sign} ${planets['0'].degree}（第${planets['0'].house}宫）</p>
+                                <p>月亮：${planets['1'].sign} ${planets['1'].degree}（第${planets['1'].house}宫）</p>
+                                <p>上升：${planets['10'].sign} ${planets['10'].degree}</p>
+                            </div>
+                        </div>
+
+                        <div class="house-section">
+                            ${houses.map(h => `
+                                <div class="house-item">
+                                    <h4>${h.name}（${h.sign}）</h4>
+                                    ${h.mainStar ? `<p class="zodiac-sign">守护：${h.mainStar}</p>` : ''}
+                                    <p class="zodiac-sign">${h.degree}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="planet-aspect" style="margin-top:20px">
+                            <h3>✨ 特殊相位</h3>
+                            <div class="aspect-detail">
+                                <p>太阳-月亮相位：${data.attribute.wind.length ? '风象特质显著' : '无显著相位'}</p>
+                                ${planets['Regulus'] ? 
+                                `<p>轩辕十四：${planets['Regulus'].sign} ${planets['Regulus'].degree}（古典吉星）</p>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+                }
+            };
+
+            // 确保jQuery已加载
+            if(typeof jQuery === 'undefined') {
+                console.error('jQuery未加载');
+                return;
             }
 
-            function showError(message) {
-                const weatherInfo = document.getElementById('weatherInfo');
-                weatherInfo.innerHTML = `<p style="color: #e74c3c">⚠️ ${message}</p>`;
-                weatherInfo.classList.add('visible');
-            }
+            $('#submitBtn').off('click').on('click', function() {
+                const ajaxData = {
+                    access_token: '989f888c4283e2cc2d8a5aa4af60932c',
+                    birthday: $('#birthday').val().replace('T', ' ') + ':00',
+                    longitude: $('#longitude').val(),
+                    latitude: $('#latitude').val(),
+                    tz: $('#tz').val(),
+                    h_sys: $('#h_sys').val(),
+                    planets: ['0','1','2','3','4'],
+                    planet_xs: ['433'],
+                    planet_xf: ['Regulus'],
+                    virtual: ['10'],
+                    svg_type: ['1'],
+                    phase: {'0':0.5,'30':0.5},
+                    is_corpus: ['1']
+                };
+
+                $('#result').html('<div class="loading">🪐 星体运行计算中...</div>');
+
+                $.ajax({
+                    type: "POST",
+                    url: "http://www.xingpan.vip/astrology/chart/natal",
+                    data: ajaxData,
+                    success: function (result) {
+                        if(result.code === 0) {
+                            const vizHTML = AstroVisualizer.generateHTML(result);
+                            $('#result').html(vizHTML);
+                        } else {
+                            $('#result').html(`<div style="color:#ff69b4">❌ ${result.msg}</div>`);
+                        }
+                    },
+                    error: function (e) {
+                        $('#result').html(`<div style="color:#ff69b4">❌ 错误：${e.responseText || '服务器连接失败'}</div>`);
+                    }
+                });
+            });
+        }
 
     </script>
 </body>
